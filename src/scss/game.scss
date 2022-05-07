@@ -1,0 +1,53 @@
+.game-container {
+  position: relative;
+
+  padding: 15px;
+  width: 590px;
+  height: 590px;
+
+  background: #bbada0;
+  border-radius: 6px;
+
+  .grid-container {
+
+    .grid-row {
+      display: flex;
+      justify-content: space-between;
+  
+      margin-bottom: 15px;
+      height: 100px;
+    }
+
+    .grid-cell {
+      width: 100px;
+  
+      border-radius: 3px;
+      background: rgba(238, 228, 218, 0.35);
+    }
+  }
+
+  .tile-container {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 560px;
+    height: 560px;
+
+    .tile {
+      width: 100px;
+      height: 100px;
+      transition: 100ms ease-in-out;
+      transition-property: transform;
+
+      .tile-inner {
+        width: 100px;
+        height: 100px;
+        border-radius: 3px;
+        text-align: center;
+        font-size: 55px;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
