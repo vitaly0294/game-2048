@@ -1,3 +1,5 @@
+'use strict';
+
 export const game = () => {
 	// test matrix
 	const gameMatrix = [
@@ -118,15 +120,69 @@ export const game = () => {
 		}
 	}
 
-	// add event listener
-	const addEventListenerMoveLeft = () => {
-		// const container = document.querySelector('.container');
-		window.addEventListener('keydown', e => {
-			if (e.key === 'ArrowLeft') console.log(e.key);
-		});
-		window.addEventListener('pointermove', (e) => {
-			console.log(e.clientX);
-		});
+	// add event hendlers
+	const eventHendlers = () => {
+		const container = document.querySelector('.container');
+		container.ondragstart = () => false;
+
+		const addEventKeyboard = () => {
+			document.addEventListener('keydown', e => {
+				switch (e.key) {
+				case 'ArrowUp':
+					console.log('ArrowUp');
+					break;
+				case 'ArrowDown':
+					console.log('ArrowDown');
+					break;
+				case 'ArrowLeft':
+					console.log('ArrowLeft');
+					break;
+				case 'ArrowRight':
+					console.log('ArrowRight');
+					break;
+				default:
+					break;
+				}
+			});
+		};
+
+		const addEventPointer = () => {
+			container.addEventListener('pointerdown', (eStart) => {
+				const startClientX = eStart.clientX;
+				const startClientY = eStart.clientY;
+				const pointerType = eStart.pointerType;
+				const isPrimary = eStart.isPrimary;
+
+				// eslint-disable-next-line max-len
+				if ((pointerType !== 'touch') || (pointerType === 'touch' && isPrimary === true)) {
+					container.addEventListener('pointerup', function aloshka(eEnd) {
+						console.log(eEnd);
+						const endClientX = eEnd.clientX;
+						const endClientY = eEnd.clientY;
+
+						const diffX = endClientX - startClientX;
+						console.log('diffX', diffX);
+						const diffY = endClientY - startClientY;
+						console.log('diffY', diffY);
+						const absDiffX = Math.abs(diffX);
+						const absDiffY = Math.abs(diffY);
+
+						if (absDiffX > absDiffY) {
+							console.log('X');
+							diffX > 0 ? console.log('right X') : console.log('left X');
+						}
+						if (absDiffX < absDiffY) {
+							console.log('Y');
+							diffY > 0 ? console.log('down Y') : console.log('up Y');
+						}
+						container.removeEventListener('pointerup', aloshka);
+					});
+				}
+			});
+		};
+
+		addEventKeyboard();
+		addEventPointer();
 	}
 
 	// start game
@@ -134,7 +190,7 @@ export const game = () => {
 		layoutGeneration();
 		startGame(gameMatrix);
 		renderGameMatrix(gameMatrix);
-		addEventListenerMoveLeft();
+		eventHendlers();
 	}
 
 	start();

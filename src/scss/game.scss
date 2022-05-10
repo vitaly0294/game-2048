@@ -8,6 +8,9 @@
   background: #bbada0;
   border-radius: 6px;
 
+  touch-action: none;
+  user-select: none;
+
   .grid-container {
 
     .grid-row {
