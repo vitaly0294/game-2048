@@ -1,21 +1,28 @@
+/* eslint-disable max-len */
 'use strict';
 
 export const game = () => {
 	// test matrix
-	const gameMatrix = [
-		[0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0],
-	];
+	const createNewArr = (row = 5, cell = 5) => {
+		const arr = [];
+		for (let i = 0; i < row; i++) {
+			arr[i] = [];
+			for (let j = 0; j < cell; j++) {
+				arr[i].push(0);
+			}
+		}
+		return arr;
+	}
+
+	const gameMatrix = createNewArr();
+
 
 	// const gameMatrix = [
 	// 	[1, 2, 3, 4, 5],
 	// 	[6, 7, 8, 9, 10],
 	// 	[11, 12, 13, 14, 15],
 	// 	[16, 17, 18, 19, 20],
-	// 	[21, 22, 23, 24, 25],
+	// 	[21, 22, 23, 24, j
 	// ];
 
 	// const gameMatrix = [
@@ -55,12 +62,20 @@ export const game = () => {
 		gameContainer.append(tileContainer);
 	}
 
+	// Clianing container
+	const clianingContainer = () => {
+		const tile = document.querySelectorAll('.tile');
+		tile.forEach(item => {
+			item.remove();
+		});
+	}
+
 	// render cells
 	const renderGameMatrix = gameMatrix => {
 		const tileContainer = document.querySelector('.tile-container');
 		gameMatrix.forEach((row, i) => {
 			row.forEach((cell, j) => {
-				if (cell!==0) {
+				if (cell !== 0) {
 					const tile = document.createElement('div');
 					const tileInner = document.createElement('div');
 
@@ -120,6 +135,134 @@ export const game = () => {
 		}
 	}
 
+	// entryNewGameMatrix
+	const entryNewGameMatrix = moveMatrix => {
+		let count = 0;
+		// for (let i = 0; i < 5; i++) {
+		// 	for (let j = 0; j < 5; j++) {
+		// 		if (moveMatrix[i][j] !== gameMatrix[i][j]) {
+		// 			console.log(1);
+		// 			break;
+		// 		}
+		// 	}
+		// }
+
+		moveMatrix.forEach((row, i) => {
+			row.forEach((cell, j) => {
+				if (moveMatrix[i][j] === gameMatrix[i][j]) {
+					count++;
+				}
+				gameMatrix[i][j] = cell;
+			});
+		});
+		count === 25 ? console.log('равны') : console.log('не равны');
+	}
+
+	// remove or add class for animation
+	const togleClassPosition = (iNew, jNew, i, j) => {
+		const tilePosition = document.querySelector(`.tile-position-${i}-${j}`);
+		tilePosition.classList.remove(`tile-position-${i}-${j}`);
+		tilePosition.classList.add(`tile-position-${iNew}-${jNew}`)
+	}
+
+	// move left
+	const moveLeft = () => {
+		const moveMatrix = createNewArr();
+
+		for (let i = 0; i < 5; i++) {
+			let jNew = 0;
+			for (let j = 0; j < 5; j++) {
+				if (gameMatrix[i][j] !== 0) {
+					moveMatrix[i][jNew] = gameMatrix[i][j];
+					togleClassPosition(i, jNew, i, j);
+					jNew++;
+				}
+			}
+		}
+		return moveMatrix;
+	}
+
+	// move right
+	const moveRight = () => {
+		const moveMatrix = createNewArr();
+
+		for (let i = 4; i > -1; i--) {
+			let jNew = 4;
+			for (let j = 4; j > -1; j--) {
+				if (gameMatrix[i][j] !== 0) {
+					moveMatrix[i][jNew] = gameMatrix[i][j];
+					togleClassPosition(i, jNew, i, j);
+					jNew--;
+				}
+			}
+		}
+		return moveMatrix;
+	}
+
+	// move up
+	const moveUp = () => {
+		const moveMatrix = createNewArr();
+
+		for (let j = 0; j < 5; j++) {
+			let iNew = 0;
+			for (let i = 0; i < 5; i++) {
+				if (gameMatrix[i][j] !== 0) {
+					moveMatrix[iNew][j] = gameMatrix[i][j];
+					togleClassPosition(iNew, j, i, j);
+					iNew++;
+				}
+			}
+		}
+		return moveMatrix;
+	}
+
+	// move Down
+	const moveDown = () => {
+		const moveMatrix = createNewArr();
+
+		for (let j = 4; j > -1; j--) {
+			let iNew = 4;
+			for (let i = 4; i > -1; i--) {
+				if (gameMatrix[i][j] !== 0) {
+					moveMatrix[iNew][j] = gameMatrix[i][j];
+					togleClassPosition(iNew, j, i, j);
+					iNew--;
+				}
+			}
+		}
+		return moveMatrix;
+	}
+
+	const additionLeft = () => {
+		for (let i = 0; i < 5; i++) {
+			for (let j = 1; j < 5; j++) {
+				if (gameMatrix[i][j - 1] === gameMatrix[i][j]) {
+					gameMatrix[i][j - 1] = gameMatrix[i][j - 1] + gameMatrix[i][j];
+					if (j === 4) {
+						gameMatrix[i][j] = 0;
+					} else {
+						gameMatrix[i][j] = gameMatrix[i][j + 1];
+					}
+				}
+			}
+		}
+	}
+
+	const additionRight = () => {
+		for (let i = 0; i < 5; i++) {
+			for (let j = 3; j > -1; j--) {
+				if (gameMatrix[i][j + 1] === gameMatrix[i][j]) {
+					gameMatrix[i][j + 1] = gameMatrix[i][j + 1] + gameMatrix[i][j];
+					if (j === 0) {
+						gameMatrix[i][j] = 0;
+					} else {
+						gameMatrix[i][j] = gameMatrix[i][j - 1];
+					}
+				}
+			}
+		}
+	}
+
 	// add event hendlers
 	const eventHendlers = () => {
 		const container = document.querySelector('.container');
@@ -127,22 +270,44 @@ export const game = () => {
 
 		const addEventKeyboard = () => {
 			document.addEventListener('keydown', e => {
-				switch (e.key) {
-				case 'ArrowUp':
-					console.log('ArrowUp');
-					break;
-				case 'ArrowDown':
-					console.log('ArrowDown');
-					break;
-				case 'ArrowLeft':
-					console.log('ArrowLeft');
-					break;
-				case 'ArrowRight':
-					console.log('ArrowRight');
-					break;
-				default:
-					break;
+				if (e.key === 'ArrowUp') {
+					entryNewGameMatrix(moveUp());
 				}
+
+				if (e.key === 'ArrowDown') {
+					entryNewGameMatrix(moveDown());
+				}
+
+				if (e.key === 'ArrowLeft') {
+					entryNewGameMatrix(moveLeft());
+					clianingContainer();
+					renderGameMatrix(gameMatrix);
+					additionLeft();
+
+					const arrEmptyCells = getEmptyCells(gameMatrix);
+					recordRandomNumInMatrix(
+						getRandomСoordinatesCell(arrEmptyCells),
+						getRandomNumCell(),
+						gameMatrix
+					);
+				}
+
+				if (e.key === 'ArrowRight') {
+					entryNewGameMatrix(moveRight());
+					clianingContainer();
+					renderGameMatrix(gameMatrix);
+					additionRight();
+
+					const arrEmptyCells = getEmptyCells(gameMatrix);
+					recordRandomNumInMatrix(
+						getRandomСoordinatesCell(arrEmptyCells),
+						getRandomNumCell(),
+						gameMatrix
+					);
+				}
+
+				clianingContainer();
+				renderGameMatrix(gameMatrix);
 			});
 		};
 
@@ -153,29 +318,24 @@ export const game = () => {
 				const pointerType = eStart.pointerType;
 				const isPrimary = eStart.isPrimary;
 
-				// eslint-disable-next-line max-len
 				if ((pointerType !== 'touch') || (pointerType === 'touch' && isPrimary === true)) {
-					container.addEventListener('pointerup', function aloshka(eEnd) {
-						console.log(eEnd);
+					container.addEventListener('pointerup', function endPoint(eEnd) {
 						const endClientX = eEnd.clientX;
 						const endClientY = eEnd.clientY;
-
 						const diffX = endClientX - startClientX;
-						console.log('diffX', diffX);
 						const diffY = endClientY - startClientY;
-						console.log('diffY', diffY);
 						const absDiffX = Math.abs(diffX);
 						const absDiffY = Math.abs(diffY);
 
-						if (absDiffX > absDiffY) {
-							console.log('X');
-							diffX > 0 ? console.log('right X') : console.log('left X');
+						if (absDiffX > 20 || absDiffY > 20) {
+							if (absDiffX > absDiffY) {
+								diffX > 0 ? console.log('right X') : console.log('left X');
+							}
+							if (absDiffX < absDiffY) {
+								diffY > 0 ? console.log('down Y') : console.log('up Y');
+							}
 						}
-						if (absDiffX < absDiffY) {
-							console.log('Y');
-							diffY > 0 ? console.log('down Y') : console.log('up Y');
-						}
-						container.removeEventListener('pointerup', aloshka);
+						container.removeEventListener('pointerup', endPoint);
 					});
 				}
 			});
