@@ -16,23 +16,6 @@ export const game = () => {
 
 	const gameMatrix = createNewArr();
 
-
-	// const gameMatrix = [
-	// 	[1, 2, 3, 4, 5],
-	// 	[6, 7, 8, 9, 10],
-	// 	[11, 12, 13, 14, 15],
-	// 	[16, 17, 18, 19, 20],
-	// 	[21, 22, 23, 24, j
-	// ];
-
-	// const gameMatrix = [
-	// 	[2, 0, 2048, 0, 64],
-	// 	[0, 4, 0, 128, 0],
-	// 	[0, 0, 8, 0, 0],
-	// 	[0, 256, 0, 16, 0],
-	// 	[512, 0, 1024, 0, 32],
-	// ];
-
 	// layout generation
 	const layoutGeneration = () => {
 		const resBtn = document.querySelector('.res-btn-container');
@@ -108,7 +91,7 @@ export const game = () => {
 	// get Random Сoordinates Cell
 	const getRandomСoordinatesCell = arrEmptyCells => {
 		const max = arrEmptyCells.length;
-		const rand = Math.floor(Math.random() * (max + 1));
+		const rand = Math.floor(Math.random() * max);
 		return arrEmptyCells[rand];
 	}
 
@@ -135,27 +118,18 @@ export const game = () => {
 		}
 	}
 
+	// check move and addition
+	// const checkAction = gameMatrix => {
+	// 	return gameMatrix;
+	// }
+
 	// entryNewGameMatrix
 	const entryNewGameMatrix = moveMatrix => {
-		let count = 0;
-		// for (let i = 0; i < 5; i++) {
-		// 	for (let j = 0; j < 5; j++) {
-		// 		if (moveMatrix[i][j] !== gameMatrix[i][j]) {
-		// 			console.log(1);
-		// 			break;
-		// 		}
-		// 	}
-		// }
-
 		moveMatrix.forEach((row, i) => {
 			row.forEach((cell, j) => {
-				if (moveMatrix[i][j] === gameMatrix[i][j]) {
-					count++;
-				}
 				gameMatrix[i][j] = cell;
 			});
 		});
-		count === 25 ? console.log('равны') : console.log('не равны');
 	}
 
 	// remove or add class for animation
@@ -168,6 +142,7 @@ export const game = () => {
 	// move left
 	const moveLeft = () => {
 		const moveMatrix = createNewArr();
+		let checkMove = 0;
 
 		for (let i = 0; i < 5; i++) {
 			let jNew = 0;
@@ -175,16 +150,20 @@ export const game = () => {
 				if (gameMatrix[i][j] !== 0) {
 					moveMatrix[i][jNew] = gameMatrix[i][j];
 					togleClassPosition(i, jNew, i, j);
+					if (jNew !== j) {
+						checkMove = 1;
+					}
 					jNew++;
 				}
 			}
 		}
-		return moveMatrix;
+		return {moveMatrix, checkMove};
 	}
 
 	// move right
 	const moveRight = () => {
 		const moveMatrix = createNewArr();
+		let checkMove = 0;
 
 		for (let i = 4; i > -1; i--) {
 			let jNew = 4;
@@ -192,16 +171,20 @@ export const game = () => {
 				if (gameMatrix[i][j] !== 0) {
 					moveMatrix[i][jNew] = gameMatrix[i][j];
 					togleClassPosition(i, jNew, i, j);
+					if (jNew !== j) {
+						checkMove = 1;
+					}
 					jNew--;
 				}
 			}
 		}
-		return moveMatrix;
+		return {moveMatrix, checkMove};
 	}
 
 	// move up
 	const moveUp = () => {
 		const moveMatrix = createNewArr();
+		let checkMove = 0;
 
 		for (let j = 0; j < 5; j++) {
 			let iNew = 0;
@@ -209,16 +192,20 @@ export const game = () => {
 				if (gameMatrix[i][j] !== 0) {
 					moveMatrix[iNew][j] = gameMatrix[i][j];
 					togleClassPosition(iNew, j, i, j);
+					if (iNew !== i) {
+						checkMove = 1;
+					}
 					iNew++;
 				}
 			}
 		}
-		return moveMatrix;
+		return {moveMatrix, checkMove};
 	}
 
 	// move Down
 	const moveDown = () => {
 		const moveMatrix = createNewArr();
+		let checkMove = 0;
 
 		for (let j = 4; j > -1; j--) {
 			let iNew = 4;
@@ -226,14 +213,19 @@ export const game = () => {
 				if (gameMatrix[i][j] !== 0) {
 					moveMatrix[iNew][j] = gameMatrix[i][j];
 					togleClassPosition(iNew, j, i, j);
+					if (iNew !== i) {
+						checkMove = 1;
+					}
 					iNew--;
 				}
 			}
 		}
-		return moveMatrix;
+		return {moveMatrix, checkMove};
 	}
 
+	// add left
 	const additionLeft = () => {
+		let checkAddition = 0;
 		for (let i = 0; i < 5; i++) {
 			for (let j = 1; j < 5; j++) {
 				if (gameMatrix[i][j - 1] === gameMatrix[i][j]) {
@@ -243,12 +235,18 @@ export const game = () => {
 					} else {
 						gameMatrix[i][j] = gameMatrix[i][j + 1];
 					}
+					if (gameMatrix[i][j - 1] !== 0) {
+						checkAddition = 1;
+					}
 				}
 			}
 		}
+		return checkAddition;
 	}
 
+	// add right
 	const additionRight = () => {
+		let checkAddition = 0;
 		for (let i = 0; i < 5; i++) {
 			for (let j = 3; j > -1; j--) {
 				if (gameMatrix[i][j + 1] === gameMatrix[i][j]) {
@@ -258,9 +256,55 @@ export const game = () => {
 					} else {
 						gameMatrix[i][j] = gameMatrix[i][j - 1];
 					}
+					if (gameMatrix[i][j + 1] !== 0) {
+						checkAddition = 1;
+					}
 				}
 			}
 		}
+		return checkAddition;
+	}
+
+	// add Up
+	const additionUp = () => {
+		let checkAddition = 0;
+		for (let j = 0; j < 5; j++) {
+			for (let i = 1; i < 5; i++) {
+				if (gameMatrix[i - 1][j] === gameMatrix[i][j]) {
+					gameMatrix[i - 1][j] = gameMatrix[i - 1][j] + gameMatrix[i][j];
+					if (i === 4) {
+						gameMatrix[i][j] = 0;
+					} else {
+						gameMatrix[i][j] = gameMatrix[i + 1][j];
+					}
+					if (gameMatrix[i - 1][j] !== 0) {
+						checkAddition = 1;
+					}
+				}
+			}
+		}
+		return checkAddition;
+	}
+
+	// add down
+	const additionDown = () => {
+		let checkAddition = 0;
+		for (let j = 0; j < 5; j++) {
+			for (let i = 3; i > -1; i--) {
+				if (gameMatrix[i + 1][j] === gameMatrix[i][j]) {
+					gameMatrix[i + 1][j] = gameMatrix[i + 1][j] + gameMatrix[i][j];
+					if (i === 0) {
+						gameMatrix[i][j] = 0;
+					} else {
+						gameMatrix[i][j] = gameMatrix[i - 1][j];
+					}
+					if (gameMatrix[i + 1][j] !== 0) {
+						checkAddition = 1;
+					}
+				}
+			}
+		}
+		return checkAddition;
 	}
 
 	// add event hendlers
@@ -271,39 +315,76 @@ export const game = () => {
 		const addEventKeyboard = () => {
 			document.addEventListener('keydown', e => {
 				if (e.key === 'ArrowUp') {
-					entryNewGameMatrix(moveUp());
+					const move = moveUp();
+
+					entryNewGameMatrix(move.moveMatrix);
+					clianingContainer();
+					renderGameMatrix(gameMatrix);
+
+					const addCheck = additionUp();
+					if (addCheck === 1 || move.checkMove === 1) {
+						const arrEmptyCells = getEmptyCells(gameMatrix);
+						recordRandomNumInMatrix(
+							getRandomСoordinatesCell(arrEmptyCells),
+							getRandomNumCell(),
+							gameMatrix
+						);
+					}
 				}
 
 				if (e.key === 'ArrowDown') {
-					entryNewGameMatrix(moveDown());
+					const move = moveDown();
+
+					entryNewGameMatrix(move.moveMatrix);
+					clianingContainer();
+					renderGameMatrix(gameMatrix);
+
+					const addCheck = additionDown();
+					if (addCheck === 1 || move.checkMove === 1) {
+						const arrEmptyCells = getEmptyCells(gameMatrix);
+						recordRandomNumInMatrix(
+							getRandomСoordinatesCell(arrEmptyCells),
+							getRandomNumCell(),
+							gameMatrix
+						);
+					}
 				}
 
 				if (e.key === 'ArrowLeft') {
-					entryNewGameMatrix(moveLeft());
+					const move = moveLeft();
+
+					entryNewGameMatrix(move.moveMatrix);
 					clianingContainer();
 					renderGameMatrix(gameMatrix);
-					additionLeft();
 
-					const arrEmptyCells = getEmptyCells(gameMatrix);
-					recordRandomNumInMatrix(
-						getRandomСoordinatesCell(arrEmptyCells),
-						getRandomNumCell(),
-						gameMatrix
-					);
+					const addCheck = additionLeft();
+					if (addCheck === 1 || move.checkMove === 1) {
+						const arrEmptyCells = getEmptyCells(gameMatrix);
+						recordRandomNumInMatrix(
+							getRandomСoordinatesCell(arrEmptyCells),
+							getRandomNumCell(),
+							gameMatrix
+						);
+					}
 				}
 
 				if (e.key === 'ArrowRight') {
-					entryNewGameMatrix(moveRight());
+					const move = moveRight();
+
+					entryNewGameMatrix(move.moveMatrix);
 					clianingContainer();
 					renderGameMatrix(gameMatrix);
-					additionRight();
 
-					const arrEmptyCells = getEmptyCells(gameMatrix);
-					recordRandomNumInMatrix(
-						getRandomСoordinatesCell(arrEmptyCells),
-						getRandomNumCell(),
-						gameMatrix
-					);
+					const addCheck = additionRight();
+
+					if (addCheck === 1 || move.checkMove === 1) {
+						const arrEmptyCells = getEmptyCells(gameMatrix);
+						recordRandomNumInMatrix(
+							getRandomСoordinatesCell(arrEmptyCells),
+							getRandomNumCell(),
+							gameMatrix
+						);
+					}
 				}
 
 				clianingContainer();
