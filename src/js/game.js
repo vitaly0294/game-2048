@@ -45,9 +45,6 @@ export const game = () => {
 		gameContainer.append(tileContainer);
 	}
 
-	// animation
-
-
 	// Clianing container
 	const clianingContainer = () => {
 		const tile = document.querySelectorAll('.tile');
@@ -57,7 +54,7 @@ export const game = () => {
 	}
 
 	// render cells
-	const renderGameMatrix = gameMatrix => {
+	const renderGameMatrix = (gameMatrix, arrAdd = []) => {
 		const tileContainer = document.querySelector('.tile-container');
 		gameMatrix.forEach((row, i) => {
 			row.forEach((cell, j) => {
@@ -76,6 +73,14 @@ export const game = () => {
 				}
 			});
 		});
+
+		if (arrAdd.length > 0) {
+			arrAdd.forEach((cell) => {
+				const tile = tileContainer.querySelector(`.tile-position-${cell[0]}-${cell[1]}`);
+				tile.style.transform = `translate(${cell[1] * 115}px, ${cell[0] * 115}px) scale(1.1)`;
+				setTimeout(() => tile.style = false, 200);
+			});
+		}
 	}
 
 	// get Empty Cells
@@ -121,11 +126,6 @@ export const game = () => {
 		}
 	}
 
-	// check move and addition
-	// const checkAction = gameMatrix => {
-	// 	return gameMatrix;
-	// }
-
 	// entryNewGameMatrix
 	const entryNewGameMatrix = moveMatrix => {
 		moveMatrix.forEach((row, i) => {
@@ -140,11 +140,6 @@ export const game = () => {
 		const tilePosition = document.querySelector(`.tile-position-${i}-${j}`);
 		tilePosition.classList.remove(`tile-position-${i}-${j}`);
 		tilePosition.classList.add(`tile-position-${iNew}-${jNew}`)
-
-		// console.log('iNew: ', iNew, 'jNew: ', jNew, 'i: ', i, 'j: ', j);
-		// console.log(tilePosition);
-		// console.log(tilePosition.classList);
-		// console.log('-------------------------------');
 	}
 
 	// move left
@@ -252,11 +247,13 @@ export const game = () => {
 
 	// add left
 	const additionLeft = () => {
+		const arrAdd = [];
 		let checkAddition = 0;
 		for (let i = 0; i < 5; i++) {
 			for (let j = 1; j < 5; j++) {
 				if (gameMatrix[i][j - 1] === gameMatrix[i][j]) {
 					gameMatrix[i][j - 1] = gameMatrix[i][j - 1] + gameMatrix[i][j];
+
 					if (j === 4) {
 						gameMatrix[i][j] = 0;
 					} else {
@@ -264,15 +261,17 @@ export const game = () => {
 					}
 					if (gameMatrix[i][j - 1] !== 0) {
 						checkAddition = 1;
+						arrAdd.push([i, j - 1]);
 					}
 				}
 			}
 		}
-		return checkAddition;
+		return {checkAddition, arrAdd};
 	}
 
 	// add right
 	const additionRight = () => {
+		const arrAdd = [];
 		let checkAddition = 0;
 		for (let i = 0; i < 5; i++) {
 			for (let j = 3; j > -1; j--) {
@@ -285,15 +284,17 @@ export const game = () => {
 					}
 					if (gameMatrix[i][j + 1] !== 0) {
 						checkAddition = 1;
+						arrAdd.push([i, j + 1]);
 					}
 				}
 			}
 		}
-		return checkAddition;
+		return {checkAddition, arrAdd};
 	}
 
 	// add Up
 	const additionUp = () => {
+		const arrAdd = [];
 		let checkAddition = 0;
 		for (let j = 0; j < 5; j++) {
 			for (let i = 1; i < 5; i++) {
@@ -306,15 +307,17 @@ export const game = () => {
 					}
 					if (gameMatrix[i - 1][j] !== 0) {
 						checkAddition = 1;
+						arrAdd.push([i - 1, j]);
 					}
 				}
 			}
 		}
-		return checkAddition;
+		return {checkAddition, arrAdd};
 	}
 
 	// add down
 	const additionDown = () => {
+		const arrAdd = [];
 		let checkAddition = 0;
 		for (let j = 0; j < 5; j++) {
 			for (let i = 3; i > -1; i--) {
@@ -327,11 +330,12 @@ export const game = () => {
 					}
 					if (gameMatrix[i + 1][j] !== 0) {
 						checkAddition = 1;
+						arrAdd.push([i + 1, j]);
 					}
 				}
 			}
 		}
-		return checkAddition;
+		return {checkAddition, arrAdd};
 	}
 
 	let checkPress = 0;
@@ -345,8 +349,8 @@ export const game = () => {
 		clianingContainer();
 		renderGameMatrix(gameMatrix);
 
-		const addCheck = directionAdd();
-		if (addCheck === 1 || move.checkMove === 1) {
+		const add = directionAdd();
+		if (add.checkAddition === 1 || move.checkMove === 1) {
 			const arrEmptyCells = getEmptyCells(gameMatrix);
 			recordRandomNumInMatrix(
 				getRandomСoordinatesCell(arrEmptyCells),
@@ -356,7 +360,7 @@ export const game = () => {
 		}
 
 		clianingContainer();
-		renderGameMatrix(gameMatrix);
+		renderGameMatrix(gameMatrix, add.arrAdd.length > 0 ? add.arrAdd : []);
 		checkPress = 0;
 	}
 
