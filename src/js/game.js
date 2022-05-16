@@ -75,10 +75,12 @@ export const game = () => {
 		});
 
 		if (arrAdd.length > 0) {
+			console.log(arrAdd);
 			arrAdd.forEach((cell) => {
-				const tile = tileContainer.querySelector(`.tile-position-${cell[0]}-${cell[1]}`);
+				const tile = document.querySelector(`.tile-position-${cell[0]}-${cell[1]}`);
+				console.log(tile);
 				tile.style.transform = `translate(${cell[1] * 115}px, ${cell[0] * 115}px) scale(1.1)`;
-				setTimeout(() => tile.style = false, 200);
+				setTimeout(() => tile.style = false, 100);
 			});
 		}
 	}
@@ -254,14 +256,16 @@ export const game = () => {
 				if (gameMatrix[i][j - 1] === gameMatrix[i][j]) {
 					gameMatrix[i][j - 1] = gameMatrix[i][j - 1] + gameMatrix[i][j];
 
-					if (j === 4) {
-						gameMatrix[i][j] = 0;
-					} else {
-						gameMatrix[i][j] = gameMatrix[i][j + 1];
-					}
 					if (gameMatrix[i][j - 1] !== 0) {
 						checkAddition = 1;
 						arrAdd.push([i, j - 1]);
+					}
+
+					if (j < 4) {
+						gameMatrix[i][j] = 0;
+						j++;
+					} else {
+						gameMatrix[i][j] = 0;
 					}
 				}
 			}
@@ -277,14 +281,17 @@ export const game = () => {
 			for (let j = 3; j > -1; j--) {
 				if (gameMatrix[i][j + 1] === gameMatrix[i][j]) {
 					gameMatrix[i][j + 1] = gameMatrix[i][j + 1] + gameMatrix[i][j];
-					if (j === 0) {
-						gameMatrix[i][j] = 0;
-					} else {
-						gameMatrix[i][j] = gameMatrix[i][j - 1];
-					}
+
 					if (gameMatrix[i][j + 1] !== 0) {
 						checkAddition = 1;
 						arrAdd.push([i, j + 1]);
+					}
+
+					if (j < 0) {
+						gameMatrix[i][j] = 0;
+						j--;
+					} else {
+						gameMatrix[i][j] = 0;
 					}
 				}
 			}
@@ -300,14 +307,17 @@ export const game = () => {
 			for (let i = 1; i < 5; i++) {
 				if (gameMatrix[i - 1][j] === gameMatrix[i][j]) {
 					gameMatrix[i - 1][j] = gameMatrix[i - 1][j] + gameMatrix[i][j];
-					if (i === 4) {
-						gameMatrix[i][j] = 0;
-					} else {
-						gameMatrix[i][j] = gameMatrix[i + 1][j];
-					}
+
 					if (gameMatrix[i - 1][j] !== 0) {
 						checkAddition = 1;
 						arrAdd.push([i - 1, j]);
+					}
+
+					if (i < 4) {
+						gameMatrix[i][j] = 0;
+						i++;
+					} else {
+						gameMatrix[i][j] = 0;
 					}
 				}
 			}
@@ -323,14 +333,17 @@ export const game = () => {
 			for (let i = 3; i > -1; i--) {
 				if (gameMatrix[i + 1][j] === gameMatrix[i][j]) {
 					gameMatrix[i + 1][j] = gameMatrix[i + 1][j] + gameMatrix[i][j];
-					if (i === 0) {
-						gameMatrix[i][j] = 0;
-					} else {
-						gameMatrix[i][j] = gameMatrix[i - 1][j];
-					}
+
 					if (gameMatrix[i + 1][j] !== 0) {
 						checkAddition = 1;
 						arrAdd.push([i + 1, j]);
+					}
+
+					if (i < 0) {
+						gameMatrix[i][j] = 0;
+						i--;
+					} else {
+						gameMatrix[i][j] = 0;
 					}
 				}
 			}
@@ -342,14 +355,23 @@ export const game = () => {
 
 	// move in the game
 	const moveInGame = async (directionMove, directionAdd) => {
+		// console.log('--------');
 		checkPress = 1;
-		const move = await directionMove();
+		let move = await directionMove();
 
 		entryNewGameMatrix(move.moveMatrix);
 		clianingContainer();
 		renderGameMatrix(gameMatrix);
 
 		const add = directionAdd();
+
+		if (add.checkAddition === 1) {
+			clianingContainer();
+			renderGameMatrix(gameMatrix, add.arrAdd.length > 0 ? add.arrAdd : []);
+			move = await directionMove();
+			entryNewGameMatrix(move.moveMatrix);
+		}
+
 		if (add.checkAddition === 1 || move.checkMove === 1) {
 			const arrEmptyCells = getEmptyCells(gameMatrix);
 			recordRandomNumInMatrix(
@@ -360,7 +382,8 @@ export const game = () => {
 		}
 
 		clianingContainer();
-		renderGameMatrix(gameMatrix, add.arrAdd.length > 0 ? add.arrAdd : []);
+		renderGameMatrix(gameMatrix);
+
 		checkPress = 0;
 	}
 
