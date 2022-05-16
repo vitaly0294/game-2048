@@ -18,7 +18,7 @@ export const game = () => {
 
 	// layout generation
 	const layoutGeneration = () => {
-		const resBtn = document.querySelector('.res-btn-container');
+		const btn = document.querySelector('.btn-container');
 		const gameContainer = document.createElement('div');
 		const gridContainer = document.createElement('div');
 		const tileContainer = document.createElement('div');
@@ -27,7 +27,7 @@ export const game = () => {
 		gridContainer.className = 'grid-container';
 		tileContainer.className = 'tile-container';
 
-		resBtn.after(gameContainer);
+		btn.after(gameContainer);
 		gameContainer.append(gridContainer);
 
 		for (let row = 0; row < 5; row++) {
@@ -75,12 +75,10 @@ export const game = () => {
 		});
 
 		if (arrAdd.length > 0) {
-			console.log(arrAdd);
 			arrAdd.forEach((cell) => {
 				const tile = document.querySelector(`.tile-position-${cell[0]}-${cell[1]}`);
-				console.log(tile);
 				tile.style.transform = `translate(${cell[1] * 115}px, ${cell[0] * 115}px) scale(1.1)`;
-				setTimeout(() => tile.style = false, 100);
+				setTimeout(() => tile.style = false, 200);
 			});
 		}
 	}
@@ -155,9 +153,7 @@ export const game = () => {
 				if (gameMatrix[i][j] !== 0) {
 					moveMatrix[i][jNew] = gameMatrix[i][j];
 					togleClassPosition(i, jNew, i, j);
-					if (jNew !== j) {
-						checkMove = 1;
-					}
+					jNew !== j ? checkMove = 1 : '';
 					jNew++;
 				}
 			}
@@ -181,9 +177,7 @@ export const game = () => {
 				if (gameMatrix[i][j] !== 0) {
 					moveMatrix[i][jNew] = gameMatrix[i][j];
 					togleClassPosition(i, jNew, i, j);
-					if (jNew !== j) {
-						checkMove = 1;
-					}
+					jNew !== j ? checkMove = 1 : '';
 					jNew--;
 				}
 			}
@@ -206,9 +200,7 @@ export const game = () => {
 				if (gameMatrix[i][j] !== 0) {
 					moveMatrix[iNew][j] = gameMatrix[i][j];
 					togleClassPosition(iNew, j, i, j);
-					if (iNew !== i) {
-						checkMove = 1;
-					}
+					iNew !== i ? checkMove = 1 : '';
 					iNew++;
 				}
 			}
@@ -232,9 +224,7 @@ export const game = () => {
 				if (gameMatrix[i][j] !== 0) {
 					moveMatrix[iNew][j] = gameMatrix[i][j];
 					togleClassPosition(iNew, j, i, j);
-					if (iNew !== i) {
-						checkMove = 1;
-					}
+					iNew !== i ? checkMove = 1 : '';
 					iNew--;
 				}
 			}
@@ -355,7 +345,6 @@ export const game = () => {
 
 	// move in the game
 	const moveInGame = async (directionMove, directionAdd) => {
-		// console.log('--------');
 		checkPress = 1;
 		let move = await directionMove();
 
@@ -387,17 +376,38 @@ export const game = () => {
 		checkPress = 0;
 	}
 
+	// time game
+	let checkTimeGame = 0;
+
+	const setStartTimeGame = () => {
+		checkTimeGame = 1;
+		const startDate = new Date();
+		console.log(startDate);
+	}
+
 	// add event hendlers
 	const eventHendlers = () => {
 		const container = document.querySelector('.container');
 		container.ondragstart = () => false;
 
+		const addEventClick = () => {
+			document.addEventListener('click', e => {
+				console.log(e.currentTarget);
+			})
+		}
+
 		const addEventKeyboard = () => {
 			document.addEventListener('keydown', e => {
-				(e.key === 'ArrowUp' && checkPress === 0) ? moveInGame(moveUp, additionUp) :
-					(e.key === 'ArrowDown' && checkPress === 0) ? moveInGame(moveDown, additionDown) :
-						(e.key === 'ArrowLeft' && checkPress === 0) ? moveInGame(moveLeft, additionLeft) :
-							(e.key === 'ArrowRight' && checkPress === 0) ? moveInGame(moveRight, additionRight) : '';
+				if (checkPress === 0) {
+					e.key === 'ArrowUp' ? moveInGame(moveUp, additionUp) :
+						e.key === 'ArrowDown' ? moveInGame(moveDown, additionDown) :
+							e.key === 'ArrowLeft' ? moveInGame(moveLeft, additionLeft) :
+								e.key === 'ArrowRight' ? moveInGame(moveRight, additionRight) : '';
+				}
+
+				if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+					checkTimeGame ? '' : setStartTimeGame();
+				}
 			});
 		};
 
@@ -419,6 +429,7 @@ export const game = () => {
 							const absDiffY = Math.abs(diffY);
 
 							if (absDiffX > 20 || absDiffY > 20) {
+								checkTimeGame ? '' : setStartTimeGame();
 								if (absDiffX > absDiffY) {
 									diffX > 0 ? moveInGame(moveRight, additionRight) : moveInGame(moveLeft, additionLeft);
 								}
@@ -435,6 +446,7 @@ export const game = () => {
 
 		addEventKeyboard();
 		addEventPointer();
+		addEventClick();
 	}
 
 	// start game

@@ -1,0 +1,79 @@
+.heading {
+  display: flex;
+  justify-content: space-between;
+
+  .title {
+    font-size: 80px;
+    font-weight: bold;
+  }
+
+  .scores-container, .times-container {
+    position: relative;
+    display: flex;
+    padding: 25px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .scores-container::after, .times-container::after {
+    position: absolute;
+    width: 100%;
+    top: 10px;
+    left: 0;
+    text-align: center;
+  }
+
+  .scores-container::after {
+    content: 'SCORES';
+  }
+  
+  .times-container::after  {
+    content: 'TIMES';
+  }
+
+  .score, .best-score, .time, .best-time {
+    position: relative;
+    background: #bbada0;
+    padding: 15px 25px;
+    font-size: 25px;
+    height: 60px;
+    line-height: 47px;
+    font-weight: bold;
+    border-radius: 3px;
+    color: white;
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  .score, .time {
+    margin-right: 10px;
+  }
+
+  .score::after, .best-score::after, .time::after, .best-time::after {
+    position: absolute;
+    width: 100%;
+    top: 10px;
+    left: 0;
+    text-transform: uppercase;
+    font-size: 13px;
+    line-height: 13px;
+    text-align: center;
+    color: #eee4da;
+  }
+
+  .score::after {
+    content: 'SCORE';
+  }
+
+  .best-score::after {
+    content: 'BEST';
+  }
+
+  .time::after {
+    content: 'TIME';
+  }
+
+  .best-time::after {
+    content: 'BEST';
+  }
+}
