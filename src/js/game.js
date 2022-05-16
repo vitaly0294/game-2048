@@ -2,7 +2,7 @@
 'use strict';
 
 export const game = () => {
-	// test matrix
+	// matrix
 	const createNewArr = (row = 5, cell = 5) => {
 		const arr = [];
 		for (let i = 0; i < row; i++) {
@@ -44,6 +44,9 @@ export const game = () => {
 
 		gameContainer.append(tileContainer);
 	}
+
+	// animation
+
 
 	// Clianing container
 	const clianingContainer = () => {
@@ -137,10 +140,15 @@ export const game = () => {
 		const tilePosition = document.querySelector(`.tile-position-${i}-${j}`);
 		tilePosition.classList.remove(`tile-position-${i}-${j}`);
 		tilePosition.classList.add(`tile-position-${iNew}-${jNew}`)
+
+		// console.log('iNew: ', iNew, 'jNew: ', jNew, 'i: ', i, 'j: ', j);
+		// console.log(tilePosition);
+		// console.log(tilePosition.classList);
+		// console.log('-------------------------------');
 	}
 
 	// move left
-	const moveLeft = () => {
+	const moveLeft = async () => {
 		const moveMatrix = createNewArr();
 		let checkMove = 0;
 
@@ -157,11 +165,16 @@ export const game = () => {
 				}
 			}
 		}
-		return {moveMatrix, checkMove};
+
+		const timeout = new Promise(resolve => {
+			setTimeout(() => resolve({moveMatrix, checkMove}), 100);
+		});
+		const result = await timeout;
+		return result;
 	}
 
 	// move right
-	const moveRight = () => {
+	const moveRight = async () => {
 		const moveMatrix = createNewArr();
 		let checkMove = 0;
 
@@ -178,14 +191,18 @@ export const game = () => {
 				}
 			}
 		}
-		return {moveMatrix, checkMove};
+
+		const timeout = new Promise(resolve => {
+			setTimeout(() => resolve({moveMatrix, checkMove}), 100);
+		});
+		const result = await timeout;
+		return result;
 	}
 
 	// move up
-	const moveUp = () => {
+	const moveUp = async () => {
 		const moveMatrix = createNewArr();
 		let checkMove = 0;
-
 		for (let j = 0; j < 5; j++) {
 			let iNew = 0;
 			for (let i = 0; i < 5; i++) {
@@ -199,11 +216,16 @@ export const game = () => {
 				}
 			}
 		}
-		return {moveMatrix, checkMove};
+
+		const timeout = new Promise(resolve => {
+			setTimeout(() => resolve({moveMatrix, checkMove}), 100);
+		});
+		const result = await timeout;
+		return result;
 	}
 
 	// move Down
-	const moveDown = () => {
+	const moveDown = async () => {
 		const moveMatrix = createNewArr();
 		let checkMove = 0;
 
@@ -220,7 +242,12 @@ export const game = () => {
 				}
 			}
 		}
-		return {moveMatrix, checkMove};
+
+		const timeout = new Promise(resolve => {
+			setTimeout(() => resolve({moveMatrix, checkMove}), 100);
+		});
+		const result = await timeout;
+		return result;
 	}
 
 	// add left
@@ -307,6 +334,32 @@ export const game = () => {
 		return checkAddition;
 	}
 
+	let checkPress = 0;
+
+	// move in the game
+	const moveInGame = async (directionMove, directionAdd) => {
+		checkPress = 1;
+		const move = await directionMove();
+
+		entryNewGameMatrix(move.moveMatrix);
+		clianingContainer();
+		renderGameMatrix(gameMatrix);
+
+		const addCheck = directionAdd();
+		if (addCheck === 1 || move.checkMove === 1) {
+			const arrEmptyCells = getEmptyCells(gameMatrix);
+			recordRandomNumInMatrix(
+				getRandomСoordinatesCell(arrEmptyCells),
+				getRandomNumCell(),
+				gameMatrix
+			);
+		}
+
+		clianingContainer();
+		renderGameMatrix(gameMatrix);
+		checkPress = 0;
+	}
+
 	// add event hendlers
 	const eventHendlers = () => {
 		const container = document.querySelector('.container');
@@ -314,110 +367,41 @@ export const game = () => {
 
 		const addEventKeyboard = () => {
 			document.addEventListener('keydown', e => {
-				if (e.key === 'ArrowUp') {
-					const move = moveUp();
-
-					entryNewGameMatrix(move.moveMatrix);
-					clianingContainer();
-					renderGameMatrix(gameMatrix);
-
-					const addCheck = additionUp();
-					if (addCheck === 1 || move.checkMove === 1) {
-						const arrEmptyCells = getEmptyCells(gameMatrix);
-						recordRandomNumInMatrix(
-							getRandomСoordinatesCell(arrEmptyCells),
-							getRandomNumCell(),
-							gameMatrix
-						);
-					}
-				}
-
-				if (e.key === 'ArrowDown') {
-					const move = moveDown();
-
-					entryNewGameMatrix(move.moveMatrix);
-					clianingContainer();
-					renderGameMatrix(gameMatrix);
-
-					const addCheck = additionDown();
-					if (addCheck === 1 || move.checkMove === 1) {
-						const arrEmptyCells = getEmptyCells(gameMatrix);
-						recordRandomNumInMatrix(
-							getRandomСoordinatesCell(arrEmptyCells),
-							getRandomNumCell(),
-							gameMatrix
-						);
-					}
-				}
-
-				if (e.key === 'ArrowLeft') {
-					const move = moveLeft();
-
-					entryNewGameMatrix(move.moveMatrix);
-					clianingContainer();
-					renderGameMatrix(gameMatrix);
-
-					const addCheck = additionLeft();
-					if (addCheck === 1 || move.checkMove === 1) {
-						const arrEmptyCells = getEmptyCells(gameMatrix);
-						recordRandomNumInMatrix(
-							getRandomСoordinatesCell(arrEmptyCells),
-							getRandomNumCell(),
-							gameMatrix
-						);
-					}
-				}
-
-				if (e.key === 'ArrowRight') {
-					const move = moveRight();
-
-					entryNewGameMatrix(move.moveMatrix);
-					clianingContainer();
-					renderGameMatrix(gameMatrix);
-
-					const addCheck = additionRight();
-
-					if (addCheck === 1 || move.checkMove === 1) {
-						const arrEmptyCells = getEmptyCells(gameMatrix);
-						recordRandomNumInMatrix(
-							getRandomСoordinatesCell(arrEmptyCells),
-							getRandomNumCell(),
-							gameMatrix
-						);
-					}
-				}
-
-				clianingContainer();
-				renderGameMatrix(gameMatrix);
+				(e.key === 'ArrowUp' && checkPress === 0) ? moveInGame(moveUp, additionUp) :
+					(e.key === 'ArrowDown' && checkPress === 0) ? moveInGame(moveDown, additionDown) :
+						(e.key === 'ArrowLeft' && checkPress === 0) ? moveInGame(moveLeft, additionLeft) :
+							(e.key === 'ArrowRight' && checkPress === 0) ? moveInGame(moveRight, additionRight) : '';
 			});
 		};
 
 		const addEventPointer = () => {
 			container.addEventListener('pointerdown', (eStart) => {
-				const startClientX = eStart.clientX;
-				const startClientY = eStart.clientY;
-				const pointerType = eStart.pointerType;
-				const isPrimary = eStart.isPrimary;
+				if (checkPress === 0) {
+					const startClientX = eStart.clientX;
+					const startClientY = eStart.clientY;
+					const pointerType = eStart.pointerType;
+					const isPrimary = eStart.isPrimary;
 
-				if ((pointerType !== 'touch') || (pointerType === 'touch' && isPrimary === true)) {
-					container.addEventListener('pointerup', function endPoint(eEnd) {
-						const endClientX = eEnd.clientX;
-						const endClientY = eEnd.clientY;
-						const diffX = endClientX - startClientX;
-						const diffY = endClientY - startClientY;
-						const absDiffX = Math.abs(diffX);
-						const absDiffY = Math.abs(diffY);
+					if ((pointerType !== 'touch') || (pointerType === 'touch' && isPrimary === true)) {
+						container.addEventListener('pointerup', function endPoint(eEnd) {
+							const endClientX = eEnd.clientX;
+							const endClientY = eEnd.clientY;
+							const diffX = endClientX - startClientX;
+							const diffY = endClientY - startClientY;
+							const absDiffX = Math.abs(diffX);
+							const absDiffY = Math.abs(diffY);
 
-						if (absDiffX > 20 || absDiffY > 20) {
-							if (absDiffX > absDiffY) {
-								diffX > 0 ? console.log('right X') : console.log('left X');
+							if (absDiffX > 20 || absDiffY > 20) {
+								if (absDiffX > absDiffY) {
+									diffX > 0 ? moveInGame(moveRight, additionRight) : moveInGame(moveLeft, additionLeft);
+								}
+								if (absDiffX < absDiffY) {
+									diffY > 0 ? moveInGame(moveDown, additionDown) : moveInGame(moveUp, additionUp);
+								}
 							}
-							if (absDiffX < absDiffY) {
-								diffY > 0 ? console.log('down Y') : console.log('up Y');
-							}
-						}
-						container.removeEventListener('pointerup', endPoint);
-					});
+							container.removeEventListener('pointerup', endPoint);
+						});
+					}
 				}
 			});
 		};
