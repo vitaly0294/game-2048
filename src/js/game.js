@@ -15,6 +15,7 @@ export const game = () => {
 	}
 
 	let gameMatrix = createNewArr();
+	const gameMatrixPrevState = createNewArr();
 
 	// layout generation
 	const layoutGeneration = () => {
@@ -126,11 +127,11 @@ export const game = () => {
 		}
 	}
 
-	// entryNewGameMatrix
-	const entryNewGameMatrix = moveMatrix => {
-		moveMatrix.forEach((row, i) => {
+	// copy Game Matrix
+	const copyGameMatrix = (oldMatrix, newMatrix = gameMatrix) => {
+		oldMatrix.forEach((row, i) => {
 			row.forEach((cell, j) => {
-				gameMatrix[i][j] = cell;
+				newMatrix[i][j] = cell;
 			});
 		});
 	}
@@ -202,6 +203,13 @@ export const game = () => {
 		updateScore() {
 			this.scorePlayBlock.textContent = `${this.scorePlay}`;
 		}
+	}
+
+	// back step
+	const backStep = () => {
+		copyGameMatrix(gameMatrixPrevState, gameMatrix);
+		clianingContainer();
+		renderGameMatrix(gameMatrix);
 	}
 
 	// move left
@@ -419,10 +427,11 @@ export const game = () => {
 
 	// move in the game
 	const moveInGame = async (directionMove, directionAdd) => {
+		copyGameMatrix(gameMatrix, gameMatrixPrevState);
 		checkPress = 1;
 		let move = await directionMove();
 
-		entryNewGameMatrix(move.moveMatrix);
+		copyGameMatrix(move.moveMatrix);
 		clianingContainer();
 		renderGameMatrix(gameMatrix);
 
@@ -432,7 +441,7 @@ export const game = () => {
 			clianingContainer();
 			renderGameMatrix(gameMatrix, add.arrAdd.length > 0 ? add.arrAdd : []);
 			move = await directionMove();
-			entryNewGameMatrix(move.moveMatrix);
+			copyGameMatrix(move.moveMatrix);
 		}
 
 		if (add.checkAddition === 1 || move.checkMove === 1) {
@@ -458,7 +467,8 @@ export const game = () => {
 		const addEventClick = () => {
 			document.addEventListener('click', e => {
 				const target = e.target;
-				target.matches('.restart-btn') ? start('restart') : '';
+				target.matches('.restart-btn') ? start('restart') :
+					target.matches('.back-step-btn') ? backStep() : '';
 			})
 		}
 
@@ -523,8 +533,8 @@ export const game = () => {
 			gameMatrix = createNewArr();
 			clianingContainer();
 		}
-
 		startGame(gameMatrix);
+		copyGameMatrix(gameMatrix, gameMatrixPrevState);
 		renderGameMatrix(gameMatrix);
 	}
 
