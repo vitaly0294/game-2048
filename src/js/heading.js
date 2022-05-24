@@ -34,6 +34,6 @@ export const header = () => {
 	score.textContent = '0';
 	bestScore.textContent = '0';
 
-	time.textContent = '0';
-	bestTime.textContent = '0';
+	time.textContent = '00:00:00';
+	bestTime.textContent = '00:00:00';
 };

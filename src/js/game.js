@@ -14,7 +14,7 @@ export const game = () => {
 		return arr;
 	}
 
-	const gameMatrix = createNewArr();
+	let gameMatrix = createNewArr();
 
 	// layout generation
 	const layoutGeneration = () => {
@@ -142,6 +142,68 @@ export const game = () => {
 		tilePosition.classList.add(`tile-position-${iNew}-${jNew}`)
 	}
 
+	// time game
+	const timeGame = {
+		startTimeGame: 0,
+		intervalId: 0,
+		timePlayBlock: document.querySelector('.time'),
+		timePlay: 0,
+		timeBestPlayBlock: document.querySelector('.best-time'),
+		timeTopPlay: 0,
+
+		timer() {
+			this.intervalId = setInterval(this.updateTime.bind(this), 1000);
+		},
+
+		setStartTimeGame() {
+			this.startTimeGame = Date.now();
+			this.timer();
+		},
+
+		ressetTimeGame() {
+			clearInterval(this.intervalId);
+			this.startTimeGame = 0;
+			this.timePlayBlock.textContent = `00:00:00`;
+		},
+
+		getTimeGameString(diff) {
+			const hour = (diff / 3600 < 1) ? 0 : Math.floor(diff / 3600);
+			const min = (diff / 60 - hour * 60 < 1) ? 0 : Math.floor(diff / 60 - hour * 60);
+			const sec = (diff - (hour * 60 + min) * 60 < 1) ? 0 : Math.floor(diff - (hour * 60 + min) * 60);
+			const res = (...time) => time.map(item => (String(item).length < 2) ? '0' + item : '' + item).join(':');
+
+			return `${res(hour, min, sec)}`;
+		},
+
+		updateTime() {
+			const timeNow = Date.now();
+			this.timePlay = (timeNow - this.startTimeGame)/1000;
+			this.timePlayBlock.textContent = this.getTimeGameString(this.timePlay);
+		},
+	}
+
+	// score game
+	const scoreGame = {
+		scorePlay: 0,
+		scorePlayBlock: document.querySelector('.score'),
+		scoreTopPlay: 0,
+		scoreTopPlayBlock: document.querySelector('.best-score'),
+
+		addScore(score) {
+			this.scorePlay+=score;
+			this.updateScore();
+		},
+
+		resetScorePlay() {
+			this.scorePlay = 0;
+			this.updateScore();
+		},
+
+		updateScore() {
+			this.scorePlayBlock.textContent = `${this.scorePlay}`;
+		}
+	}
+
 	// move left
 	const moveLeft = async () => {
 		const moveMatrix = createNewArr();
@@ -244,7 +306,10 @@ export const game = () => {
 		for (let i = 0; i < 5; i++) {
 			for (let j = 1; j < 5; j++) {
 				if (gameMatrix[i][j - 1] === gameMatrix[i][j]) {
+					(gameMatrix[i][j] !== 0) ? togleClassPosition(i, j - 1, i, j) : '';
+
 					gameMatrix[i][j - 1] = gameMatrix[i][j - 1] + gameMatrix[i][j];
+					scoreGame.addScore(gameMatrix[i][j - 1]);
 
 					if (gameMatrix[i][j - 1] !== 0) {
 						checkAddition = 1;
@@ -270,7 +335,10 @@ export const game = () => {
 		for (let i = 0; i < 5; i++) {
 			for (let j = 3; j > -1; j--) {
 				if (gameMatrix[i][j + 1] === gameMatrix[i][j]) {
+					(gameMatrix[i][j] !== 0) ? togleClassPosition(i, j + 1, i, j) : '';
+
 					gameMatrix[i][j + 1] = gameMatrix[i][j + 1] + gameMatrix[i][j];
+					scoreGame.addScore(gameMatrix[i][j + 1]);
 
 					if (gameMatrix[i][j + 1] !== 0) {
 						checkAddition = 1;
@@ -296,7 +364,10 @@ export const game = () => {
 		for (let j = 0; j < 5; j++) {
 			for (let i = 1; i < 5; i++) {
 				if (gameMatrix[i - 1][j] === gameMatrix[i][j]) {
+					(gameMatrix[i][j] !== 0) ? togleClassPosition(i - 1, j, i, j) : '';
+
 					gameMatrix[i - 1][j] = gameMatrix[i - 1][j] + gameMatrix[i][j];
+					scoreGame.addScore(gameMatrix[i - 1][j]);
 
 					if (gameMatrix[i - 1][j] !== 0) {
 						checkAddition = 1;
@@ -322,7 +393,10 @@ export const game = () => {
 		for (let j = 0; j < 5; j++) {
 			for (let i = 3; i > -1; i--) {
 				if (gameMatrix[i + 1][j] === gameMatrix[i][j]) {
+					(gameMatrix[i][j] !== 0) ? togleClassPosition(i + 1, j, i, j) : '';
+
 					gameMatrix[i + 1][j] = gameMatrix[i + 1][j] + gameMatrix[i][j];
+					scoreGame.addScore(gameMatrix[i + 1][j]);
 
 					if (gameMatrix[i + 1][j] !== 0) {
 						checkAddition = 1;
@@ -376,15 +450,6 @@ export const game = () => {
 		checkPress = 0;
 	}
 
-	// time game
-	let checkTimeGame = 0;
-
-	const setStartTimeGame = () => {
-		checkTimeGame = 1;
-		const startDate = new Date();
-		console.log(startDate);
-	}
-
 	// add event hendlers
 	const eventHendlers = () => {
 		const container = document.querySelector('.container');
@@ -392,7 +457,8 @@ export const game = () => {
 
 		const addEventClick = () => {
 			document.addEventListener('click', e => {
-				console.log(e.currentTarget);
+				const target = e.target;
+				target.matches('.restart-btn') ? start('restart') : '';
 			})
 		}
 
@@ -406,7 +472,7 @@ export const game = () => {
 				}
 
 				if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-					checkTimeGame ? '' : setStartTimeGame();
+					timeGame.startTimeGame ? '' : timeGame.setStartTimeGame();
 				}
 			});
 		};
@@ -429,7 +495,7 @@ export const game = () => {
 							const absDiffY = Math.abs(diffY);
 
 							if (absDiffX > 20 || absDiffY > 20) {
-								checkTimeGame ? '' : setStartTimeGame();
+								timeGame.startTimeGame ? '' : timeGame.setStartTimeGame();
 								if (absDiffX > absDiffY) {
 									diffX > 0 ? moveInGame(moveRight, additionRight) : moveInGame(moveLeft, additionLeft);
 								}
@@ -450,12 +516,19 @@ export const game = () => {
 	}
 
 	// start game
-	const start = () => {
-		layoutGeneration();
+	const start = (mode = '') => {
+		if (mode === 'restart') {
+			scoreGame.resetScorePlay();
+			timeGame.ressetTimeGame();
+			gameMatrix = createNewArr();
+			clianingContainer();
+		}
+
 		startGame(gameMatrix);
 		renderGameMatrix(gameMatrix);
-		eventHendlers();
 	}
 
+	layoutGeneration();
 	start();
+	eventHendlers();
 }
