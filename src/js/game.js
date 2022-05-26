@@ -189,6 +189,11 @@ export const game = () => {
 		scorePlayBlock: document.querySelector('.score'),
 		scoreTopPlay: 0,
 		scoreTopPlayBlock: document.querySelector('.best-score'),
+		scorePlayPrev: 0,
+
+		copyScorePlay() {
+			this.scorePlayPrev = this.scorePlay;
+		},
 
 		addScore(score) {
 			this.scorePlay+=score;
@@ -200,8 +205,8 @@ export const game = () => {
 			this.updateScore();
 		},
 
-		updateScore() {
-			this.scorePlayBlock.textContent = `${this.scorePlay}`;
+		updateScore(mode) {
+			mode ? this.scorePlayBlock.textContent = `${this.scorePlayPrev}` : this.scorePlayBlock.textContent = `${this.scorePlay}`;
 		}
 	}
 
@@ -210,68 +215,66 @@ export const game = () => {
 		copyGameMatrix(gameMatrixPrevState, gameMatrix);
 		clianingContainer();
 		renderGameMatrix(gameMatrix);
+		scoreGame.updateScore('backStep');
 	}
 
-	// move left
-	const moveLeft = async () => {
+	// move
+	const movement = async (derection) => {
 		const moveMatrix = createNewArr();
 		let checkMove = 0;
 
-		for (let i = 0; i < 5; i++) {
-			let jNew = 0;
-			for (let j = 0; j < 5; j++) {
-				if (gameMatrix[i][j] !== 0) {
-					moveMatrix[i][jNew] = gameMatrix[i][j];
-					togleClassPosition(i, jNew, i, j);
-					jNew !== j ? checkMove = 1 : '';
-					jNew++;
-				}
-			}
-		}
-
-		const timeout = new Promise(resolve => {
-			setTimeout(() => resolve({moveMatrix, checkMove}), 100);
-		});
-		const result = await timeout;
-		return result;
-	}
-
-	// move right
-	const moveRight = async () => {
-		const moveMatrix = createNewArr();
-		let checkMove = 0;
-
-		for (let i = 4; i > -1; i--) {
-			let jNew = 4;
-			for (let j = 4; j > -1; j--) {
-				if (gameMatrix[i][j] !== 0) {
-					moveMatrix[i][jNew] = gameMatrix[i][j];
-					togleClassPosition(i, jNew, i, j);
-					jNew !== j ? checkMove = 1 : '';
-					jNew--;
-				}
-			}
-		}
-
-		const timeout = new Promise(resolve => {
-			setTimeout(() => resolve({moveMatrix, checkMove}), 100);
-		});
-		const result = await timeout;
-		return result;
-	}
-
-	// move up
-	const moveUp = async () => {
-		const moveMatrix = createNewArr();
-		let checkMove = 0;
-		for (let j = 0; j < 5; j++) {
-			let iNew = 0;
+		if (derection === 'left' || derection === 'right') {
 			for (let i = 0; i < 5; i++) {
-				if (gameMatrix[i][j] !== 0) {
-					moveMatrix[iNew][j] = gameMatrix[i][j];
-					togleClassPosition(iNew, j, i, j);
-					iNew !== i ? checkMove = 1 : '';
-					iNew++;
+				if (derection === 'left') {
+					let jNew = 0;
+					for (let j = 0; j < 5; j++) {
+						if (gameMatrix[i][j] !== 0) {
+							moveMatrix[i][jNew] = gameMatrix[i][j];
+							togleClassPosition(i, jNew, i, j);
+							jNew !== j ? checkMove = 1 : '';
+							jNew++;
+						}
+					}
+				}
+
+				if (derection === 'right') {
+					let jNew = 4;
+					for (let j = 4; j > -1; j--) {
+						if (gameMatrix[i][j] !== 0) {
+							moveMatrix[i][jNew] = gameMatrix[i][j];
+							togleClassPosition(i, jNew, i, j);
+							jNew !== j ? checkMove = 1 : '';
+							jNew--;
+						}
+					}
+				}
+			}
+		}
+
+		if (derection === 'up' || derection === 'down') {
+			for (let j = 0; j < 5; j++) {
+				if (derection === 'up') {
+					let iNew = 0;
+					for (let i = 0; i < 5; i++) {
+						if (gameMatrix[i][j] !== 0) {
+							moveMatrix[iNew][j] = gameMatrix[i][j];
+							togleClassPosition(iNew, j, i, j);
+							iNew !== i ? checkMove = 1 : '';
+							iNew++;
+						}
+					}
+				}
+
+				if (derection === 'down') {
+					let iNew = 4;
+					for (let i = 4; i > -1; i--) {
+						if (gameMatrix[i][j] !== 0) {
+							moveMatrix[iNew][j] = gameMatrix[i][j];
+							togleClassPosition(iNew, j, i, j);
+							iNew !== i ? checkMove = 1 : '';
+							iNew--;
+						}
+					}
 				}
 			}
 		}
@@ -283,164 +286,117 @@ export const game = () => {
 		return result;
 	}
 
-	// move Down
-	const moveDown = async () => {
-		const moveMatrix = createNewArr();
-		let checkMove = 0;
-
-		for (let j = 4; j > -1; j--) {
-			let iNew = 4;
-			for (let i = 4; i > -1; i--) {
-				if (gameMatrix[i][j] !== 0) {
-					moveMatrix[iNew][j] = gameMatrix[i][j];
-					togleClassPosition(iNew, j, i, j);
-					iNew !== i ? checkMove = 1 : '';
-					iNew--;
-				}
-			}
-		}
-
-		const timeout = new Promise(resolve => {
-			setTimeout(() => resolve({moveMatrix, checkMove}), 100);
-		});
-		const result = await timeout;
-		return result;
-	}
-
-	// add left
-	const additionLeft = () => {
+	// addition
+	const addition = (derection) => {
 		const arrAdd = [];
 		let checkAddition = 0;
-		for (let i = 0; i < 5; i++) {
-			for (let j = 1; j < 5; j++) {
-				if (gameMatrix[i][j - 1] === gameMatrix[i][j]) {
-					(gameMatrix[i][j] !== 0) ? togleClassPosition(i, j - 1, i, j) : '';
 
-					gameMatrix[i][j - 1] = gameMatrix[i][j - 1] + gameMatrix[i][j];
-					scoreGame.addScore(gameMatrix[i][j - 1]);
+		if (derection === 'left' || derection === 'right') {
+			for (let i = 0; i < 5; i++) {
+				if (derection === 'left') {
+					for (let j = 1; j < 5; j++) {
+						if (gameMatrix[i][j - 1] === gameMatrix[i][j]) {
+							(gameMatrix[i][j] !== 0) ? togleClassPosition(i, j - 1, i, j) : '';
 
-					if (gameMatrix[i][j - 1] !== 0) {
-						checkAddition = 1;
-						arrAdd.push([i, j - 1]);
+							gameMatrix[i][j - 1] = gameMatrix[i][j - 1] + gameMatrix[i][j];
+
+							if (gameMatrix[i][j - 1] !== 0) {
+								scoreGame.addScore(gameMatrix[i][j - 1]);
+								checkAddition = 1;
+								arrAdd.push([i, j - 1]);
+							}
+
+							gameMatrix[i][j] = 0;
+							j < 4 ? j++ : '';
+						}
 					}
+				}
 
-					if (j < 4) {
-						gameMatrix[i][j] = 0;
-						j++;
-					} else {
-						gameMatrix[i][j] = 0;
+				if (derection === 'right') {
+					for (let j = 3; j > -1; j--) {
+						if (gameMatrix[i][j + 1] === gameMatrix[i][j]) {
+							(gameMatrix[i][j] !== 0) ? togleClassPosition(i, j + 1, i, j) : '';
+
+							gameMatrix[i][j + 1] = gameMatrix[i][j + 1] + gameMatrix[i][j];
+
+							if (gameMatrix[i][j + 1] !== 0) {
+								scoreGame.addScore(gameMatrix[i][j + 1]);
+								checkAddition = 1;
+								arrAdd.push([i, j + 1]);
+							}
+
+							gameMatrix[i][j] = 0;
+							j < 0 ? j-- : '';
+						}
 					}
 				}
 			}
 		}
-		return {checkAddition, arrAdd};
-	}
 
-	// add right
-	const additionRight = () => {
-		const arrAdd = [];
-		let checkAddition = 0;
-		for (let i = 0; i < 5; i++) {
-			for (let j = 3; j > -1; j--) {
-				if (gameMatrix[i][j + 1] === gameMatrix[i][j]) {
-					(gameMatrix[i][j] !== 0) ? togleClassPosition(i, j + 1, i, j) : '';
+		if (derection === 'up' || derection === 'down') {
+			for (let j = 0; j < 5; j++) {
+				if (derection === 'up') {
+					for (let i = 1; i < 5; i++) {
+						if (gameMatrix[i - 1][j] === gameMatrix[i][j]) {
+							(gameMatrix[i][j] !== 0) ? togleClassPosition(i - 1, j, i, j) : '';
 
-					gameMatrix[i][j + 1] = gameMatrix[i][j + 1] + gameMatrix[i][j];
-					scoreGame.addScore(gameMatrix[i][j + 1]);
+							gameMatrix[i - 1][j] = gameMatrix[i - 1][j] + gameMatrix[i][j];
 
-					if (gameMatrix[i][j + 1] !== 0) {
-						checkAddition = 1;
-						arrAdd.push([i, j + 1]);
+							if (gameMatrix[i - 1][j] !== 0) {
+								scoreGame.addScore(gameMatrix[i - 1][j]);
+								checkAddition = 1;
+								arrAdd.push([i - 1, j]);
+							}
+
+							gameMatrix[i][j] = 0;
+							i < 4 ? i++ : '';
+						}
 					}
+				}
+				if (derection === 'down') {
+					for (let i = 3; i > -1; i--) {
+						if (gameMatrix[i + 1][j] === gameMatrix[i][j]) {
+							(gameMatrix[i][j] !== 0) ? togleClassPosition(i + 1, j, i, j) : '';
 
-					if (j < 0) {
-						gameMatrix[i][j] = 0;
-						j--;
-					} else {
-						gameMatrix[i][j] = 0;
+							gameMatrix[i + 1][j] = gameMatrix[i + 1][j] + gameMatrix[i][j];
+
+							if (gameMatrix[i + 1][j] !== 0) {
+								scoreGame.addScore(gameMatrix[i + 1][j]);
+								checkAddition = 1;
+								arrAdd.push([i + 1, j]);
+							}
+
+							gameMatrix[i][j] = 0;
+							i < 0 ? i-- : '';
+						}
 					}
 				}
 			}
 		}
-		return {checkAddition, arrAdd};
-	}
 
-	// add Up
-	const additionUp = () => {
-		const arrAdd = [];
-		let checkAddition = 0;
-		for (let j = 0; j < 5; j++) {
-			for (let i = 1; i < 5; i++) {
-				if (gameMatrix[i - 1][j] === gameMatrix[i][j]) {
-					(gameMatrix[i][j] !== 0) ? togleClassPosition(i - 1, j, i, j) : '';
-
-					gameMatrix[i - 1][j] = gameMatrix[i - 1][j] + gameMatrix[i][j];
-					scoreGame.addScore(gameMatrix[i - 1][j]);
-
-					if (gameMatrix[i - 1][j] !== 0) {
-						checkAddition = 1;
-						arrAdd.push([i - 1, j]);
-					}
-
-					if (i < 4) {
-						gameMatrix[i][j] = 0;
-						i++;
-					} else {
-						gameMatrix[i][j] = 0;
-					}
-				}
-			}
-		}
-		return {checkAddition, arrAdd};
-	}
-
-	// add down
-	const additionDown = () => {
-		const arrAdd = [];
-		let checkAddition = 0;
-		for (let j = 0; j < 5; j++) {
-			for (let i = 3; i > -1; i--) {
-				if (gameMatrix[i + 1][j] === gameMatrix[i][j]) {
-					(gameMatrix[i][j] !== 0) ? togleClassPosition(i + 1, j, i, j) : '';
-
-					gameMatrix[i + 1][j] = gameMatrix[i + 1][j] + gameMatrix[i][j];
-					scoreGame.addScore(gameMatrix[i + 1][j]);
-
-					if (gameMatrix[i + 1][j] !== 0) {
-						checkAddition = 1;
-						arrAdd.push([i + 1, j]);
-					}
-
-					if (i < 0) {
-						gameMatrix[i][j] = 0;
-						i--;
-					} else {
-						gameMatrix[i][j] = 0;
-					}
-				}
-			}
-		}
 		return {checkAddition, arrAdd};
 	}
 
 	let checkPress = 0;
 
 	// move in the game
-	const moveInGame = async (directionMove, directionAdd) => {
+	const moveInGame = async (direction) => {
 		copyGameMatrix(gameMatrix, gameMatrixPrevState);
+		scoreGame.copyScorePlay();
+
 		checkPress = 1;
-		let move = await directionMove();
+		let move = await movement(direction);
 
 		copyGameMatrix(move.moveMatrix);
 		clianingContainer();
 		renderGameMatrix(gameMatrix);
 
-		const add = directionAdd();
+		const add = addition(direction);
 
 		if (add.checkAddition === 1) {
 			clianingContainer();
 			renderGameMatrix(gameMatrix, add.arrAdd.length > 0 ? add.arrAdd : []);
-			move = await directionMove();
+			move = await movement(direction);
 			copyGameMatrix(move.moveMatrix);
 		}
 
@@ -475,10 +431,10 @@ export const game = () => {
 		const addEventKeyboard = () => {
 			document.addEventListener('keydown', e => {
 				if (checkPress === 0) {
-					e.key === 'ArrowUp' ? moveInGame(moveUp, additionUp) :
-						e.key === 'ArrowDown' ? moveInGame(moveDown, additionDown) :
-							e.key === 'ArrowLeft' ? moveInGame(moveLeft, additionLeft) :
-								e.key === 'ArrowRight' ? moveInGame(moveRight, additionRight) : '';
+					e.key === 'ArrowUp' ? moveInGame('up') :
+						e.key === 'ArrowDown' ? moveInGame('down') :
+							e.key === 'ArrowLeft' ? moveInGame('left') :
+								e.key === 'ArrowRight' ? moveInGame('right') : '';
 				}
 
 				if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
@@ -507,10 +463,10 @@ export const game = () => {
 							if (absDiffX > 20 || absDiffY > 20) {
 								timeGame.startTimeGame ? '' : timeGame.setStartTimeGame();
 								if (absDiffX > absDiffY) {
-									diffX > 0 ? moveInGame(moveRight, additionRight) : moveInGame(moveLeft, additionLeft);
+									diffX > 0 ? moveInGame('right') : moveInGame('left');
 								}
 								if (absDiffX < absDiffY) {
-									diffY > 0 ? moveInGame(moveDown, additionDown) : moveInGame(moveUp, additionUp);
+									diffY > 0 ? moveInGame('down') : moveInGame('up');
 								}
 							}
 							container.removeEventListener('pointerup', endPoint);
