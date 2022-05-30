@@ -11,6 +11,28 @@
   touch-action: none;
   user-select: none;
 
+  .game-message {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(238, 228, 218, 0.73);
+    z-index: 100;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    // animation: fade-in 800ms ease 1200ms;
+    // animation-fill-mode: both;
+
+    &_active {
+      display: flex;
+    }
+  }
+
   .grid-container {
 
     .grid-row {

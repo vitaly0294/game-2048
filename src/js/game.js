@@ -23,12 +23,15 @@ export const game = () => {
 		const gameContainer = document.createElement('div');
 		const gridContainer = document.createElement('div');
 		const tileContainer = document.createElement('div');
+		const gameMessage = document.createElement('div');
 
 		gameContainer.className = 'game-container';
 		gridContainer.className = 'grid-container';
 		tileContainer.className = 'tile-container';
+		gameMessage.className = 'game-message';
 
 		btn.after(gameContainer);
+		gameContainer.append(gameMessage);
 		gameContainer.append(gridContainer);
 
 		for (let row = 0; row < 5; row++) {
@@ -191,10 +194,6 @@ export const game = () => {
 		scoreTopPlayBlock: document.querySelector('.best-score'),
 		scorePlayPrev: 0,
 
-		copyScorePlay() {
-			this.scorePlayPrev = this.scorePlay;
-		},
-
 		addScore(score) {
 			this.scorePlay+=score;
 			this.updateScore();
@@ -202,6 +201,7 @@ export const game = () => {
 
 		resetScorePlay() {
 			this.scorePlay = 0;
+			this.scorePlayPrev = 0;
 			this.updateScore();
 		},
 
@@ -211,15 +211,64 @@ export const game = () => {
 	}
 
 	// back step
-	const backStep = () => {
-		copyGameMatrix(gameMatrixPrevState, gameMatrix);
-		clianingContainer();
-		renderGameMatrix(gameMatrix);
-		scoreGame.updateScore('backStep');
+	const btnBackStep = {
+		checkBackStep: 0,
+		checkCopyBackStep: 0,
+		btn: document.querySelector('.back-step-btn'),
+
+		backStep() {
+			copyGameMatrix(gameMatrixPrevState, gameMatrix);
+			clianingContainer();
+			renderGameMatrix(gameMatrix);
+			scoreGame.scorePlay = scoreGame.scorePlayPrev;
+			scoreGame.updateScore('backStep');
+			this.removeActionBtn();
+		},
+
+		setActionBtn() {
+			this.btn.classList.add('back-step-btn_active');
+			this.checkBackStep = 1;
+		},
+
+		removeActionBtn() {
+			if (this.btn.classList.contains('back-step-btn_active')) {
+				this.btn.classList.remove('back-step-btn_active');
+			}
+			this.checkBackStep = 0;
+		},
+	}
+
+	// check overflow matrix game
+	const checkMatrixOverflow = matrix => {
+		let check = 1;
+
+		for (let i = 0; i < 5; i++) {
+			for (let j = 0; j < 5; j++) {
+				if (matrix[i][j] === 0) check = 0;
+				if (j < 4) {
+					if (matrix[i][j] === matrix[i][j + 1]) {
+						check = 0;
+					}
+				}
+			}
+		}
+
+		for (let j = 0; j < 5; j++) {
+			for (let i = 0; i < 5; i++) {
+				if (matrix[i][j] === 0) check = 0;
+				if (i < 4) {
+					if (matrix[i][j] === matrix[i + 1][j]) {
+						check = 0;
+					}
+				}
+			}
+		}
+
+		return console.log('check', check);
 	}
 
 	// move
-	const movement = async (derection) => {
+	const movement = async (derection, gameMatrix) => {
 		const moveMatrix = createNewArr();
 		let checkMove = 0;
 
@@ -287,7 +336,7 @@ export const game = () => {
 	}
 
 	// addition
-	const addition = (derection) => {
+	const addition = (derection, addMatrix) => {
 		const arrAdd = [];
 		let checkAddition = 0;
 
@@ -295,18 +344,18 @@ export const game = () => {
 			for (let i = 0; i < 5; i++) {
 				if (derection === 'left') {
 					for (let j = 1; j < 5; j++) {
-						if (gameMatrix[i][j - 1] === gameMatrix[i][j]) {
-							(gameMatrix[i][j] !== 0) ? togleClassPosition(i, j - 1, i, j) : '';
+						if (addMatrix[i][j - 1] === addMatrix[i][j]) {
+							(addMatrix[i][j] !== 0) ? togleClassPosition(i, j - 1, i, j) : '';
 
-							gameMatrix[i][j - 1] = gameMatrix[i][j - 1] + gameMatrix[i][j];
+							addMatrix[i][j - 1] = addMatrix[i][j - 1] + addMatrix[i][j];
 
-							if (gameMatrix[i][j - 1] !== 0) {
-								scoreGame.addScore(gameMatrix[i][j - 1]);
+							if (addMatrix[i][j - 1] !== 0) {
+								scoreGame.addScore(addMatrix[i][j - 1]);
 								checkAddition = 1;
 								arrAdd.push([i, j - 1]);
 							}
 
-							gameMatrix[i][j] = 0;
+							addMatrix[i][j] = 0;
 							j < 4 ? j++ : '';
 						}
 					}
@@ -314,18 +363,18 @@ export const game = () => {
 
 				if (derection === 'right') {
 					for (let j = 3; j > -1; j--) {
-						if (gameMatrix[i][j + 1] === gameMatrix[i][j]) {
-							(gameMatrix[i][j] !== 0) ? togleClassPosition(i, j + 1, i, j) : '';
+						if (addMatrix[i][j + 1] === addMatrix[i][j]) {
+							(addMatrix[i][j] !== 0) ? togleClassPosition(i, j + 1, i, j) : '';
 
-							gameMatrix[i][j + 1] = gameMatrix[i][j + 1] + gameMatrix[i][j];
+							addMatrix[i][j + 1] = addMatrix[i][j + 1] + addMatrix[i][j];
 
-							if (gameMatrix[i][j + 1] !== 0) {
-								scoreGame.addScore(gameMatrix[i][j + 1]);
+							if (addMatrix[i][j + 1] !== 0) {
+								scoreGame.addScore(addMatrix[i][j + 1]);
 								checkAddition = 1;
 								arrAdd.push([i, j + 1]);
 							}
 
-							gameMatrix[i][j] = 0;
+							addMatrix[i][j] = 0;
 							j < 0 ? j-- : '';
 						}
 					}
@@ -337,36 +386,36 @@ export const game = () => {
 			for (let j = 0; j < 5; j++) {
 				if (derection === 'up') {
 					for (let i = 1; i < 5; i++) {
-						if (gameMatrix[i - 1][j] === gameMatrix[i][j]) {
-							(gameMatrix[i][j] !== 0) ? togleClassPosition(i - 1, j, i, j) : '';
+						if (addMatrix[i - 1][j] === addMatrix[i][j]) {
+							(addMatrix[i][j] !== 0) ? togleClassPosition(i - 1, j, i, j) : '';
 
-							gameMatrix[i - 1][j] = gameMatrix[i - 1][j] + gameMatrix[i][j];
+							addMatrix[i - 1][j] = addMatrix[i - 1][j] + addMatrix[i][j];
 
-							if (gameMatrix[i - 1][j] !== 0) {
-								scoreGame.addScore(gameMatrix[i - 1][j]);
+							if (addMatrix[i - 1][j] !== 0) {
+								scoreGame.addScore(addMatrix[i - 1][j]);
 								checkAddition = 1;
 								arrAdd.push([i - 1, j]);
 							}
 
-							gameMatrix[i][j] = 0;
+							addMatrix[i][j] = 0;
 							i < 4 ? i++ : '';
 						}
 					}
 				}
 				if (derection === 'down') {
 					for (let i = 3; i > -1; i--) {
-						if (gameMatrix[i + 1][j] === gameMatrix[i][j]) {
-							(gameMatrix[i][j] !== 0) ? togleClassPosition(i + 1, j, i, j) : '';
+						if (addMatrix[i + 1][j] === addMatrix[i][j]) {
+							(addMatrix[i][j] !== 0) ? togleClassPosition(i + 1, j, i, j) : '';
 
-							gameMatrix[i + 1][j] = gameMatrix[i + 1][j] + gameMatrix[i][j];
+							addMatrix[i + 1][j] = addMatrix[i + 1][j] + addMatrix[i][j];
 
-							if (gameMatrix[i + 1][j] !== 0) {
-								scoreGame.addScore(gameMatrix[i + 1][j]);
+							if (addMatrix[i + 1][j] !== 0) {
+								scoreGame.addScore(addMatrix[i + 1][j]);
 								checkAddition = 1;
 								arrAdd.push([i + 1, j]);
 							}
 
-							gameMatrix[i][j] = 0;
+							addMatrix[i][j] = 0;
 							i < 0 ? i-- : '';
 						}
 					}
@@ -374,41 +423,50 @@ export const game = () => {
 			}
 		}
 
-		return {checkAddition, arrAdd};
+		return {addMatrix, checkAddition, arrAdd};
 	}
 
 	let checkPress = 0;
 
 	// move in the game
 	const moveInGame = async (direction) => {
-		copyGameMatrix(gameMatrix, gameMatrixPrevState);
-		scoreGame.copyScorePlay();
+		const prevScoreGame = scoreGame.scorePlay;
 
 		checkPress = 1;
-		let move = await movement(direction);
+		const gameMatrixFutureState = createNewArr();
+		const {moveMatrix, checkMove} = await movement(direction, gameMatrix);
 
-		copyGameMatrix(move.moveMatrix);
+		copyGameMatrix(moveMatrix, gameMatrixFutureState);
 		clianingContainer();
-		renderGameMatrix(gameMatrix);
+		renderGameMatrix(gameMatrixFutureState);
 
-		const add = addition(direction);
+		const {addMatrix, checkAddition, arrAdd} = addition(direction, gameMatrixFutureState);
+		copyGameMatrix(addMatrix, gameMatrixFutureState);
 
-		if (add.checkAddition === 1) {
+		if (checkAddition === 1) {
 			clianingContainer();
-			renderGameMatrix(gameMatrix, add.arrAdd.length > 0 ? add.arrAdd : []);
-			move = await movement(direction);
-			copyGameMatrix(move.moveMatrix);
+			renderGameMatrix(gameMatrixFutureState, arrAdd.length > 0 ? arrAdd : []);
+			const {moveMatrix} = await movement(direction, gameMatrixFutureState);
+			copyGameMatrix(moveMatrix, gameMatrixFutureState);
 		}
 
-		if (add.checkAddition === 1 || move.checkMove === 1) {
-			const arrEmptyCells = getEmptyCells(gameMatrix);
+		if (checkAddition === 1 || checkMove === 1) {
+			const arrEmptyCells = getEmptyCells(gameMatrixFutureState);
+
 			recordRandomNumInMatrix(
 				getRandomСoordinatesCell(arrEmptyCells),
 				getRandomNumCell(),
-				gameMatrix
+				gameMatrixFutureState
 			);
+
+			btnBackStep.setActionBtn();
+			copyGameMatrix(gameMatrix, gameMatrixPrevState);
+			scoreGame.scorePlayPrev = prevScoreGame;
+
+			arrEmptyCells.length < 2 ? checkMatrixOverflow(gameMatrixFutureState) : '';
 		}
 
+		copyGameMatrix(gameMatrixFutureState);
 		clianingContainer();
 		renderGameMatrix(gameMatrix);
 
@@ -423,8 +481,8 @@ export const game = () => {
 		const addEventClick = () => {
 			document.addEventListener('click', e => {
 				const target = e.target;
-				target.matches('.restart-btn') ? start('restart') :
-					target.matches('.back-step-btn') ? backStep() : '';
+				target.matches('.restart-btn') ? start('restart') : '';
+				(target.matches('.back-step-btn') && btnBackStep.checkBackStep) ? btnBackStep.backStep() : '';
 			})
 		}
 
@@ -492,6 +550,7 @@ export const game = () => {
 		startGame(gameMatrix);
 		copyGameMatrix(gameMatrix, gameMatrixPrevState);
 		renderGameMatrix(gameMatrix);
+		btnBackStep.removeActionBtn();
 	}
 
 	layoutGeneration();

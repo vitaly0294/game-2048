@@ -5,13 +5,19 @@
 
   .restart-btn, .back-step-btn {
     background: #8f7a66;
+    opacity: .3;
     border-radius: 3px;
     padding: 10px 20px;
     text-decoration: none;
     color: #f9f6f2;
     line-height: 42px;
-    cursor: pointer;
     text-align: center;
     font-size: 30px;
+    cursor: default;
+  }
+
+  .restart-btn_active, .back-step-btn_active {
+    opacity: 1;
+    cursor: pointer;
   }
 }

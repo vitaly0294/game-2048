@@ -5,7 +5,7 @@ export const btn = () => {
 	const backStep = document.createElement('a');
 
 	resBtnContainer.className = 'btn-container';
-	restartBtn.className = 'restart-btn';
+	restartBtn.className = 'restart-btn restart-btn_active';
 	backStep.className = 'back-step-btn';
 
 	heading.after(resBtnContainer);
