@@ -1,10 +1,16 @@
 import '/scss/index.scss';
-import {header} from '/js/heading.js';
-import {btn} from '/js/btn.js';
+import {layoutHeader} from './js/layout/layoutHeader.js';
+import {layoutControl} from './js/layout/layoutControl.js';
+import {layoutGame} from './js/layout/layoutGame.js';
+import {layoutTable} from './js/layout/layoutTable.js';
+
 import {game} from '/js/game.js';
 
 window.addEventListener('DOMContentLoaded', () => {
-	header();
-	btn();
+	layoutHeader();
+	layoutControl();
+	layoutGame();
+	layoutTable();
+
 	game();
 });

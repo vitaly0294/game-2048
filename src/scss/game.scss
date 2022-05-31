@@ -31,6 +31,38 @@
     &_active {
       display: flex;
     }
+
+    &__text {
+      font-size: 60px;
+      font-weight: 700;
+      height: 60px;
+      line-height: 60px;
+    }
+
+    &__btn {
+      margin-top: 29px;
+
+      .retry-btn, .keep-playing-btn {
+        display: none;
+        background: #8f7a66;
+        border-radius: 3px;
+        padding: 10px 20px;
+        text-decoration: none;
+        color: #f9f6f2;
+        line-height: 42px;
+        text-align: center;
+        font-size: 30px;
+        cursor: pointer;
+      }
+
+      .retry-btn_active {
+        display: block;
+      }
+
+      .keep-playing-btn_active {
+        display: block;
+      }
+    }
   }
 
   .grid-container {

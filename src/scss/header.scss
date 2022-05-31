@@ -1,12 +1,33 @@
-.heading {
+.header {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
 
   .title {
-    width: 100%;
+    width: 50%;
     font-size: 80px;
     font-weight: bold;
+  }
+
+  .authentication {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+
+    &__icon {
+      width: 35px;
+      height: 35px;
+      background: no-repeat url(../assets/img/person.svg) ;
+      color: #bbada0;
+      cursor: pointer;
+    }
+
+    &__name {
+      font-size: 20px;
+      cursor: pointer;
+    }
   }
 
   .scores-container, .times-container {

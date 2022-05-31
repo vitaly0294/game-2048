@@ -17,38 +17,6 @@ export const game = () => {
 	let gameMatrix = createNewArr();
 	const gameMatrixPrevState = createNewArr();
 
-	// layout generation
-	const layoutGeneration = () => {
-		const btn = document.querySelector('.btn-container');
-		const gameContainer = document.createElement('div');
-		const gridContainer = document.createElement('div');
-		const tileContainer = document.createElement('div');
-		const gameMessage = document.createElement('div');
-
-		gameContainer.className = 'game-container';
-		gridContainer.className = 'grid-container';
-		tileContainer.className = 'tile-container';
-		gameMessage.className = 'game-message';
-
-		btn.after(gameContainer);
-		gameContainer.append(gameMessage);
-		gameContainer.append(gridContainer);
-
-		for (let row = 0; row < 5; row++) {
-			const gridRow = document.createElement('div');
-			gridRow.className = 'grid-row';
-			gridContainer.append(gridRow);
-
-			for (let cell = 0; cell < 5; cell++) {
-				const gridCell = document.createElement('div');
-				gridCell.className = 'grid-cell';
-				gridRow.append(gridCell);
-			}
-		}
-
-		gameContainer.append(tileContainer);
-	}
-
 	// Clianing container
 	const clianingContainer = () => {
 		const tile = document.querySelectorAll('.tile');
@@ -238,6 +206,29 @@ export const game = () => {
 		},
 	}
 
+	const tryAgain = {
+		setTryAgain() {
+			const gameMessage = document.querySelector('.game-message');
+			const retryBtn = gameMessage.querySelector('.retry-btn');
+			const textMessage = gameMessage.querySelector('.game-message__text');
+
+			gameMessage.classList.add('game-message_active');
+			retryBtn.classList.add('retry-btn_active');
+			textMessage.textContent = 'Game Over';
+		},
+
+		removeTryAgain() {
+			const gameMessage = document.querySelector('.game-message');
+			const retryBtn = gameMessage.querySelector('.retry-btn');
+			const textMessage = gameMessage.querySelector('.game-message__text');
+
+			gameMessage.classList.remove('game-message_active');
+			retryBtn.classList.remove('retry-btn_active');
+			textMessage.textContent = '';
+		}
+
+	}
+
 	// check overflow matrix game
 	const checkMatrixOverflow = matrix => {
 		let check = 1;
@@ -262,6 +253,10 @@ export const game = () => {
 					}
 				}
 			}
+		}
+
+		if (check === 1) {
+			tryAgain.setTryAgain();
 		}
 
 		return console.log('check', check);
@@ -476,13 +471,22 @@ export const game = () => {
 	// add event hendlers
 	const eventHendlers = () => {
 		const container = document.querySelector('.container');
+		const gameContainer = container.querySelector('.game-container');
 		container.ondragstart = () => false;
 
 		const addEventClick = () => {
 			document.addEventListener('click', e => {
 				const target = e.target;
-				target.matches('.restart-btn') ? start('restart') : '';
-				(target.matches('.back-step-btn') && btnBackStep.checkBackStep) ? btnBackStep.backStep() : '';
+
+				if (target.matches('.back-step-btn') && btnBackStep.checkBackStep) {
+					btnBackStep.backStep();
+					tryAgain.removeTryAgain();
+				}
+
+				if (target.matches('.retry-btn') || target.matches('.restart-btn')) {
+					start('restart');
+					tryAgain.removeTryAgain();
+				}
 			})
 		}
 
@@ -502,7 +506,7 @@ export const game = () => {
 		};
 
 		const addEventPointer = () => {
-			container.addEventListener('pointerdown', (eStart) => {
+			gameContainer.addEventListener('pointerdown', (eStart) => {
 				if (checkPress === 0) {
 					const startClientX = eStart.clientX;
 					const startClientY = eStart.clientY;
@@ -510,7 +514,7 @@ export const game = () => {
 					const isPrimary = eStart.isPrimary;
 
 					if ((pointerType !== 'touch') || (pointerType === 'touch' && isPrimary === true)) {
-						container.addEventListener('pointerup', function endPoint(eEnd) {
+						gameContainer.addEventListener('pointerup', function endPoint(eEnd) {
 							const endClientX = eEnd.clientX;
 							const endClientY = eEnd.clientY;
 							const diffX = endClientX - startClientX;
@@ -527,7 +531,7 @@ export const game = () => {
 									diffY > 0 ? moveInGame('down') : moveInGame('up');
 								}
 							}
-							container.removeEventListener('pointerup', endPoint);
+							gameContainer.removeEventListener('pointerup', endPoint);
 						});
 					}
 				}
@@ -553,7 +557,6 @@ export const game = () => {
 		btnBackStep.removeActionBtn();
 	}
 
-	layoutGeneration();
 	start();
 	eventHendlers();
 }

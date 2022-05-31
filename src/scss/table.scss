@@ -1,0 +1,53 @@
+.table {
+  position: relative;
+  margin: 50px auto;
+  padding: 15px;
+  background: #bbada0;
+  border-radius: 6px;
+
+  &::before {
+    position: absolute;
+    top: -25px;
+    left: 0;
+    width: 100%;
+    content: 'RECORDS TABLE';
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .line {
+    display: flex;
+    justify-content: center;
+    height: 20px;
+    font-size: 15px;
+    text-align: center;
+
+    .column {
+      border: 1px solid #bbada0;;
+      background: #eee4da;
+      cursor: pointer;
+
+      &_active {
+        background: #8f7a66;
+        color: #f9f6f2;
+      }
+    }
+
+    .player-num {
+      flex: 1 1;
+    }
+
+    .player-name {
+      flex: 4 1;
+    }
+
+    .player-time {
+      flex: 3 1;
+    }
+
+    .player-score {
+      flex: 3 1;
+    }
+  }
+}

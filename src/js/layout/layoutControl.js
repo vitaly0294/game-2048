@@ -1,5 +1,5 @@
-export const btn = () => {
-	const heading = document.querySelector('.heading');
+export const layoutControl = () => {
+	const header = document.querySelector('.header');
 	const resBtnContainer = document.createElement('div');
 	const restartBtn = document.createElement('a');
 	const backStep = document.createElement('a');
@@ -8,7 +8,7 @@ export const btn = () => {
 	restartBtn.className = 'restart-btn restart-btn_active';
 	backStep.className = 'back-step-btn';
 
-	heading.after(resBtnContainer);
+	header.after(resBtnContainer);
 	resBtnContainer.append(restartBtn);
 	resBtnContainer.append(backStep);
 
