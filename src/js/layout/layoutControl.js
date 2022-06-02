@@ -1,3 +1,5 @@
+import {btnBackStep} from '../btn.js'
+
 export const layoutControl = () => {
 	const header = document.querySelector('.header');
 	const resBtnContainer = document.createElement('div');
@@ -14,4 +16,6 @@ export const layoutControl = () => {
 
 	restartBtn.textContent = 'New Game';
 	backStep.textContent = 'Back Step';
+
+	btnBackStep.btn = backStep;
 };

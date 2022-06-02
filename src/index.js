@@ -1,3 +1,5 @@
+'use strict';
+
 import '/scss/index.scss';
 import {layoutHeader} from './js/layout/layoutHeader.js';
 import {layoutControl} from './js/layout/layoutControl.js';

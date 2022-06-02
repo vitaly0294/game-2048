@@ -1,3 +1,6 @@
+import {scoreGame} from '../scoreGame.js';
+import {timeGame} from '../timeGame.js'
+
 export const layoutHeader = () => {
 	const container = document.querySelector('.container');
 
@@ -39,10 +42,15 @@ export const layoutHeader = () => {
 	timesContainer.append(bestTime);
 
 	title.textContent = '2048';
-	authenticationName.textContent = 'Привет, Аноним!';
+	authenticationName.innerHTML = `Hallo, <span>Anonymous</span>!`;
 	score.textContent = '0';
 	bestScore.textContent = '0';
 
 	time.textContent = '00:00:00';
 	bestTime.textContent = '00:00:00';
+
+	timeGame.timePlayBlock = time;
+	timeGame.timeBestPlayBlock = bestTime;
+	scoreGame.scorePlayBlock = score;
+	scoreGame.scoreTopPlayBlock = bestScore;
 };
