@@ -1,5 +1,3 @@
-import {tryAgain} from '../message.js';
-
 export const layoutGame = () => {
 	const btn = document.querySelector('.btn-container');
 	const gameContainer = document.createElement('div');
@@ -44,8 +42,4 @@ export const layoutGame = () => {
 
 	retryBtn.textContent = 'Try again';
 	keepPlayingBtn.textContent = 'Keep going';
-
-	tryAgain.gameMessage = gameMessage;
-	tryAgain.retryBtn = retryBtn;
-	tryAgain.textMessage = gameMessageText;
 }

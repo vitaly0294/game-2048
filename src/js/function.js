@@ -1,4 +1,7 @@
-import {tryAgain} from './message.js';
+// import {tryAgain} from './game.js';
+// import {TryAgain} from './Message.js';
+
+// export let tryAgain;
 
 // create new matrix
 export const createNewArr = (row = 5, cell = 5) => {
@@ -77,7 +80,6 @@ export const checkMatrixOverflow = matrix => {
 			}
 		}
 	}
-
-	check === 1 ? tryAgain.setTryAgain() : '';
+	return check;
 };
 

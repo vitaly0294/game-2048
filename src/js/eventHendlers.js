@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
-import {start, moveInGame, checkPress} from './game.js';
+import {start, moveInGame, check, keepPlaying, tryAgain} from './game.js';
 import {timeGame} from './timeGame.js';
 import {btnBackStep} from './btn.js';
-import {tryAgain} from './message.js';
+// import {tryAgain} from './function.js';
 import {authentication} from './authentication.js';
 
 // add event hendlers
@@ -15,25 +15,34 @@ export const eventHendlers = () => {
 		document.addEventListener('click', e => {
 			const target = e.target;
 
+			if (target.matches('.keep-playing-btn')) {
+				keepPlaying.removeKeepPlaying();
+				check.press = 0;
+			}
+
 			if (target.matches('.back-step-btn') && btnBackStep.checkBackStep) {
 				btnBackStep.backStep();
-				tryAgain.removeTryAgain();
+				keepPlaying ? keepPlaying.removeKeepPlaying() : '';
+				tryAgain ? tryAgain.removeTryAgain() : '';
+				check.press = 0;
 			}
 
 			if (target.matches('.retry-btn') || target.matches('.restart-btn')) {
 				start('restart');
-				tryAgain.removeTryAgain();
+				keepPlaying ? keepPlaying.removeKeepPlaying() : '';
+				tryAgain ? tryAgain.removeTryAgain() : '';
+				check.press = 0;
 			}
 
 			if (target.matches('.authentication__icon') || target.closest('.authentication__name')) {
 				authentication.setNewPlayer();
 			}
 		})
-	}
+	};
 
 	const addEventKeyboard = () => {
 		document.addEventListener('keydown', e => {
-			if (checkPress === 0) {
+			if (check.press === 0) {
 				e.key === 'ArrowUp' ? moveInGame('up') :
 					e.key === 'ArrowDown' ? moveInGame('down') :
 						e.key === 'ArrowLeft' ? moveInGame('left') :
@@ -48,7 +57,7 @@ export const eventHendlers = () => {
 
 	const addEventPointer = () => {
 		gameContainer.addEventListener('pointerdown', (eStart) => {
-			if (checkPress === 0) {
+			if (check.press === 0) {
 				const startClientX = eStart.clientX;
 				const startClientY = eStart.clientY;
 				const pointerType = eStart.pointerType;
