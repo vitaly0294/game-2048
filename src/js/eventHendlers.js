@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import {
 	start,
 	moveInGame,
@@ -16,7 +17,8 @@ import {localStorageGame} from './localStorage.js';
 import {sortTable} from './table.js';
 
 export const eventHendlers = () => {
-	const container = document.querySelector('.container');
+	const body = document.querySelector('body');
+	const container = body.querySelector('.container');
 	const gameContainer = container.querySelector('.game-container');
 
 	container.ondragstart = () => false;
@@ -102,7 +104,7 @@ export const eventHendlers = () => {
 
 				if ((pointerType !== 'touch') ||
 						(pointerType === 'touch' && isPrimary === true)) {
-					gameContainer.addEventListener('pointerup', function endPoint(eEnd) {
+					document.addEventListener('pointerup', function endPoint(eEnd) {
 						const endClientX = eEnd.clientX;
 						const endClientY = eEnd.clientY;
 						const diffX = endClientX - startClientX;
@@ -119,7 +121,7 @@ export const eventHendlers = () => {
 								diffY > 0 ? moveInGame('down') : moveInGame('up');
 							}
 						}
-						gameContainer.removeEventListener('pointerup', endPoint);
+						document.removeEventListener('pointerup', endPoint);
 					});
 				}
 			}
