@@ -1,9 +1,13 @@
-import {player, clianingContainer, renderGameMatrix} from './game.js';
+import {
+	player,
+	clianingContainer,
+	renderGameMatrix
+} from './game.js';
+
 import {copyGameMatrix} from './function.js';
 import {scoreGame} from './scoreGame.js';
 import {localStorageGame} from './localStorage.js';
 
-// back step
 export const btnBackStep = {
 	checkBackStep: 0,
 	checkCopyBackStep: 0,

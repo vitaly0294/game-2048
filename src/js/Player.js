@@ -8,7 +8,8 @@ export class Player {
 		gameMatrixPrevState = [],
 		bestScore = 0,
 		bestTime = 0,
-		id = Symbol()
+		id = Symbol(),
+		numMov = 0,
 	}) {
 		this.id = id;
 		this.name = name;
@@ -19,5 +20,6 @@ export class Player {
 		this.gameMatrixPrevState = gameMatrixPrevState;
 		this.bestScore = bestScore;
 		this.bestTime = bestTime;
+		this.numMov = numMov;
 	}
 }

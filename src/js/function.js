@@ -1,8 +1,3 @@
-// import {tryAgain} from './game.js';
-// import {TryAgain} from './Message.js';
-
-// export let tryAgain;
-
 // create new matrix
 export const createNewArr = (row = 5, cell = 5) => {
 	const arr = [];

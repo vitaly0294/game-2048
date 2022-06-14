@@ -1,19 +1,34 @@
-/* eslint-disable max-len */
-import {start, moveInGame, check, keepPlaying, tryAgain} from './game.js';
+import {
+	start,
+	moveInGame,
+	check,
+	keepPlaying,
+	tryAgain,
+	player,
+	resultsTable
+} from './game.js';
+
 import {timeGame} from './timeGame.js';
 import {btnBackStep} from './btn.js';
-// import {tryAgain} from './function.js';
 import {authentication} from './authentication.js';
+import {localStorageGame} from './localStorage.js';
 
-// add event hendlers
+import {sortTable} from './table.js';
+
 export const eventHendlers = () => {
 	const container = document.querySelector('.container');
 	const gameContainer = container.querySelector('.game-container');
+
 	container.ondragstart = () => false;
 
 	const addEventClick = () => {
 		document.addEventListener('click', e => {
 			const target = e.target;
+
+			if (target.matches('.player-num')) sortTable('num');
+			if (target.matches('.player-name')) sortTable('name');
+			if (target.matches('.player-time')) sortTable('time');
+			if (target.matches('.player-score')) sortTable('score');
 
 			if (target.matches('.keep-playing-btn')) {
 				keepPlaying.removeKeepPlaying();
@@ -24,17 +39,36 @@ export const eventHendlers = () => {
 				btnBackStep.backStep();
 				keepPlaying ? keepPlaying.removeKeepPlaying() : '';
 				tryAgain ? tryAgain.removeTryAgain() : '';
+
 				check.press = 0;
+				player.numMov = 0;
+
+				localStorageGame.set('game', player);
 			}
 
 			if (target.matches('.retry-btn') || target.matches('.restart-btn')) {
+				if (player.bestTime) {
+					sortTable('num');
+
+					resultsTable.push([
+						resultsTable.length,
+						player.name,
+						Math.floor(player.bestTime),
+						player.bestScore
+					]);
+
+					localStorageGame.set('table', resultsTable);
+					sortTable();
+				}
+
 				start('restart');
 				keepPlaying ? keepPlaying.removeKeepPlaying() : '';
 				tryAgain ? tryAgain.removeTryAgain() : '';
 				check.press = 0;
 			}
 
-			if (target.matches('.authentication__icon') || target.closest('.authentication__name')) {
+			if (target.matches('.authentication__icon') ||
+					target.closest('.authentication__name')) {
 				authentication.setNewPlayer();
 			}
 		})
@@ -43,13 +77,16 @@ export const eventHendlers = () => {
 	const addEventKeyboard = () => {
 		document.addEventListener('keydown', e => {
 			if (check.press === 0) {
-				e.key === 'ArrowUp' ? moveInGame('up') :
-					e.key === 'ArrowDown' ? moveInGame('down') :
-						e.key === 'ArrowLeft' ? moveInGame('left') :
-							e.key === 'ArrowRight' ? moveInGame('right') : '';
+				if (e.key === 'ArrowUp') moveInGame('up');
+				if (e.key === 'ArrowDown') moveInGame('down');
+				if (e.key === 'ArrowLeft') moveInGame('left');
+				if (e.key === 'ArrowRight') moveInGame('right');
 			}
 
-			if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+			if (e.key === 'ArrowUp'||
+					e.key === 'ArrowDown' ||
+					e.key === 'ArrowLeft' ||
+					e.key === 'ArrowRight') {
 				timeGame.startTimeGame ? '' : timeGame.setStartTimeGame();
 			}
 		});
@@ -63,7 +100,8 @@ export const eventHendlers = () => {
 				const pointerType = eStart.pointerType;
 				const isPrimary = eStart.isPrimary;
 
-				if ((pointerType !== 'touch') || (pointerType === 'touch' && isPrimary === true)) {
+				if ((pointerType !== 'touch') ||
+						(pointerType === 'touch' && isPrimary === true)) {
 					gameContainer.addEventListener('pointerup', function endPoint(eEnd) {
 						const endClientX = eEnd.clientX;
 						const endClientY = eEnd.clientY;

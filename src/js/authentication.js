@@ -1,5 +1,8 @@
 /* eslint-disable max-len */
-import {start, player} from './game.js';
+import {
+	start,
+	player
+} from './game.js';
 
 export const authentication = {
 	authenticationName: '',

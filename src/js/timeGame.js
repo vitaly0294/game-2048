@@ -1,8 +1,7 @@
+/* eslint-disable max-len */
 import {player} from './game.js';
 import {localStorageGame} from './localStorage.js';
 
-/* eslint-disable max-len */
-// time game
 export const timeGame = {
 	startTimeGame: 0,
 	intervalId: 0,

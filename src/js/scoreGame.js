@@ -2,7 +2,6 @@
 
 import {player} from './game.js';
 
-// score game
 export const scoreGame = {
 	scorePlay: 0,
 	scorePlayBlock: document.querySelector('.score'),
@@ -11,9 +10,9 @@ export const scoreGame = {
 	scorePlayPrev: 0,
 
 	addScore(score) {
-		this.scorePlay+=score;
+		this.scorePlay += score;
 
-		player.score = this.scorePlay; // player
+		player.score = this.scorePlay;
 
 		this.updateScore();
 	},
