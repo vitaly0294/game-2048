@@ -113,75 +113,117 @@
     }
 
     .tile-2 {
-        background: #eee4da;
-
-        box-shadow: 0 0 30px 10px rgb(243 215 116 / 0%), inset 0 0 0 1px rgb(255 255 255 / 0%);
+      background: #eee4da;
+      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
     }
 
     .tile-4 {
-        background: #eee1c9;
-
-        box-shadow: 0 0 30px 10px rgb(243 215 116 / 0%), inset 0 0 0 1px rgb(255 255 255 / 0%);
+      background: #ede0c8;
+      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
     }
 
     .tile-8 {
-        color: #f9f6f2;
-        background: #f3b27a; 
+      color: #f9f6f2;
+      background: #f2b179; 
     }
 
     .tile-16 {
-        color: #f9f6f2;
-        background: #f69664;
+      color: #f9f6f2;
+      background: #f59563;
     }
 
     .tile-32 {
-        color: #f9f6f2;
-        background: #f77c5f;
-
-        box-shadow: 0 0 30px 10px rgb(243 215 116 / 32%), inset 0 0 0 1px rgb(255 255 255 / 19%);
+      color: #f9f6f2;
+      background: #f67c5f;
     }
 
     .tile-64 {
-        color: #f9f6f2;
-        background: #f75f3b;
-
-        box-shadow: 0 0 30px 10px rgb(243 215 116 / 32%), inset 0 0 0 1px rgb(255 255 255 / 19%);
+      color: #f9f6f2;
+      background: #f65e3b;
     }
 
     .tile-128 {
-        color: #f9f6f2;
-        background: #edd073;
-
-        box-shadow: 0 0 30px 10px rgb(243 215 116 / 24%), inset 0 0 0 1px rgb(255 255 255 / 14%);
+      color: #f9f6f2;
+      background: #edcf72;
+      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.2381), inset 0 0 0 1px rgba(255, 255, 255, 0.14286);
     }
 
     .tile-256 {
-        color: #f9f6f2;
-        background: #edcc62;
-
-        box-shadow: 0 0 30px 10px rgb(243 215 116 / 32%), inset 0 0 0 1px rgb(255 255 255 / 19%);
+      color: #f9f6f2;
+      background: #edcc61;
+      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.31746), inset 0 0 0 1px rgba(255, 255, 255, 0.19048);
     }
 
     .tile-512 {
-        color: #f9f6f2;
-        background: #edc950;
-
-        box-shadow: 0 0 30px 10px rgb(243 215 116 / 40%), inset 0 0 0 1px rgb(255 255 255 / 24%);
+      color: #f9f6f2;
+      background: #edc850;
+      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.39683), inset 0 0 0 1px rgba(255, 255, 255, 0.2381);
     }
 
     .tile-1024 {
-        color: #f9f6f2;
-        background: #edc53f;
-
-        box-shadow: 0 0 30px 10px rgb(243 215 116 / 48%), inset 0 0 0 1px rgb(255 255 255 / 29%);
+      color: #f9f6f2;
+      background: #edc53f;
+      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.47619), inset 0 0 0 1px rgba(255, 255, 255, 0.28571);
     }
 
     .tile-2048 {
-        color: #f9f6f2;
-        background: #edc22e;
+      color: #f9f6f2;
+      background: #edc22e;
+      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.55556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
+    }
 
-        box-shadow: 0 0 30px 10px rgb(243 215 116 / 56%), inset 0 0 0 1px rgb(255 255 255 / 33%);
-      
+    .tile-4096 {
+      color: #f9f6f2;
+      background: #ebb914;
+      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.63556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
+    }
+
+    .tile-8192 {
+      color: #f9f6f2;
+      background: #d3a612;
+      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.71556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
+    }
+
+    .tile-16384 {
+      color: #f9f6f2;
+      background: #bc9410;
+      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.79556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
+    }
+
+    .tile-32768 {
+      color: #f9f6f2;
+      background: #bc9410;
+      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.79556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
+    }
+
+    .tile-65536 {
+      color: #f9f6f2;
+      background: #bc9410;
+      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.79556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
+    }
+
+    .tile-131072 {
+      color: #f9f6f2;
+      background: #bc9410;
+      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.79556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
+    }
+
+    .tile-262144 {
+      color: #f9f6f2;
+      background: #bc9410;
+      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.79556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
+    }
+
+    .tile-524288 {
+      color: #f9f6f2;
+      background: #bc9410;
+      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.79556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
+    }
+
+    .tile-1048576 {
+      color: #f9f6f2;
+      background: #bc9410;
+      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.79556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
     }
 
     .tile-position-0-0 {
