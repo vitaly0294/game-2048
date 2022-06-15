@@ -96,129 +96,91 @@
       position: absolute;
       top: 0;
       left: 0;
+      display: flex;
+      justify-content: center;
       width: 100px;
       height: 100px;
+      border-radius: 3px;
+
       transition: 100ms ease-in-out;
       transition-property: transform;
 
       .tile-inner {
-        width: 100px;
-        height: 100px;
         border-radius: 3px;
-        text-align: center;
         line-height: 100px;
-        font-size: 55px;
         font-weight: bold;
       }
     }
 
     .tile-2 {
-      
-      .tile-inner  {
         background: #eee4da;
 
         box-shadow: 0 0 30px 10px rgb(243 215 116 / 0%), inset 0 0 0 1px rgb(255 255 255 / 0%);
-      }
     }
 
     .tile-4 {
-
-      .tile-inner  {
         background: #eee1c9;
 
         box-shadow: 0 0 30px 10px rgb(243 215 116 / 0%), inset 0 0 0 1px rgb(255 255 255 / 0%);
-      }
     }
 
     .tile-8 {
-
-      .tile-inner  {
         color: #f9f6f2;
         background: #f3b27a; 
-      }
     }
 
     .tile-16 {
-
-      .tile-inner  {
         color: #f9f6f2;
         background: #f69664;
-      }
     }
 
     .tile-32 {
-
-      .tile-inner  {
         color: #f9f6f2;
         background: #f77c5f;
 
         box-shadow: 0 0 30px 10px rgb(243 215 116 / 32%), inset 0 0 0 1px rgb(255 255 255 / 19%);
-      }
     }
 
     .tile-64 {
-
-      .tile-inner  {
         color: #f9f6f2;
         background: #f75f3b;
 
         box-shadow: 0 0 30px 10px rgb(243 215 116 / 32%), inset 0 0 0 1px rgb(255 255 255 / 19%);
-      }
     }
 
     .tile-128 {
-
-      .tile-inner  {
         color: #f9f6f2;
         background: #edd073;
-        font-size: 45px;
 
         box-shadow: 0 0 30px 10px rgb(243 215 116 / 24%), inset 0 0 0 1px rgb(255 255 255 / 14%);
-      }
     }
 
     .tile-256 {
-
-      .tile-inner  {
         color: #f9f6f2;
         background: #edcc62;
-        font-size: 45px;
 
         box-shadow: 0 0 30px 10px rgb(243 215 116 / 32%), inset 0 0 0 1px rgb(255 255 255 / 19%);
-      }
     }
 
     .tile-512 {
-
-      .tile-inner  {
         color: #f9f6f2;
         background: #edc950;
-        font-size: 45px;
 
         box-shadow: 0 0 30px 10px rgb(243 215 116 / 40%), inset 0 0 0 1px rgb(255 255 255 / 24%);
-      }
     }
 
     .tile-1024 {
-
-      .tile-inner  {
         color: #f9f6f2;
         background: #edc53f;
-        font-size: 35px;
 
         box-shadow: 0 0 30px 10px rgb(243 215 116 / 48%), inset 0 0 0 1px rgb(255 255 255 / 29%);
-      }
     }
 
     .tile-2048 {
-
-      .tile-inner  {
         color: #f9f6f2;
         background: #edc22e;
-        font-size: 35px;
 
         box-shadow: 0 0 30px 10px rgb(243 215 116 / 56%), inset 0 0 0 1px rgb(255 255 255 / 33%);
-      }
       
     }
 

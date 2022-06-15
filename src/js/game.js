@@ -43,7 +43,8 @@ export const renderGameMatrix = (gameMatrix, arrAdd = []) => {
 		row.forEach((cell, j) => {
 			if (cell !== 0) {
 				const tile = document.createElement('div');
-				const tileInner = document.createElement('div');
+				const tileInner = document.createElement('span');
+				tileInner.style.fontSize = '80px';
 
 				tile.className = `tile tile-position-${i}-${j}`;
 				tileInner.className = 'tile-inner';
@@ -53,6 +54,11 @@ export const renderGameMatrix = (gameMatrix, arrAdd = []) => {
 
 				tile.classList.add(`tile-${cell}`);
 				tile.firstChild.textContent = `${cell}`;
+
+				if (tileInner.offsetWidth > 100 * 0.9) { // переменная!!!!!!!!!!
+					const styleTileInner = getComputedStyle(tileInner);
+					tileInner.style.fontSize = `${styleTileInner.fontSize.slice(0, -2) * (100 * 0.9 / tileInner.offsetWidth)}px`;
+				}
 			}
 		});
 	});
@@ -353,7 +359,8 @@ export const game = () => {
 			gameMatrixPrevState,
 			bestScore, bestTime,
 			id,
-			numMov});
+			numMov
+		});
 
 		start('resume');
 	} else {

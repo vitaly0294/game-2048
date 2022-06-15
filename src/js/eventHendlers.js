@@ -79,6 +79,7 @@ export const eventHendlers = () => {
 	const addEventKeyboard = () => {
 		document.addEventListener('keydown', e => {
 			if (check.press === 0) {
+				if (e.key === 'ArrowUp' || e.key === 'ArrowDown') e.preventDefault();
 				if (e.key === 'ArrowUp') moveInGame('up');
 				if (e.key === 'ArrowDown') moveInGame('down');
 				if (e.key === 'ArrowLeft') moveInGame('left');
