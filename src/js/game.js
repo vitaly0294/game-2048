@@ -4,6 +4,7 @@ import {Player} from './Player.js';
 import {localStorageGame} from './localStorage.js';
 import {timeGame} from './timeGame.js';
 import {scoreGame} from './scoreGame.js';
+import {animate} from './animatiom.js';
 
 import {
 	createNewArr,
@@ -25,7 +26,6 @@ import {
 
 import {renderTable} from './table.js';
 
-
 export let player;
 export let keepPlaying;
 export let tryAgain;
@@ -37,7 +37,7 @@ export const clianingContainer = () => {
 	tile.forEach(item => item.remove());
 };
 
-export const renderGameMatrix = (gameMatrix, arrAdd = []) => {
+export const renderGameMatrix = gameMatrix => {
 	const tileContainer = document.querySelector('.tile-container');
 	gameMatrix.forEach((row, i) => {
 		row.forEach((cell, j) => {
@@ -55,21 +55,13 @@ export const renderGameMatrix = (gameMatrix, arrAdd = []) => {
 				tile.classList.add(`tile-${cell}`);
 				tile.firstChild.textContent = `${cell}`;
 
-				if (tileInner.offsetWidth > 100 * 0.9) { // переменная!!!!!!!!!!
+				if (tileInner.offsetWidth > 100 * 0.9) { // переменная!!!!!!!!!! высота текста
 					const styleTileInner = getComputedStyle(tileInner);
 					tileInner.style.fontSize = `${styleTileInner.fontSize.slice(0, -2) * (100 * 0.9 / tileInner.offsetWidth)}px`;
 				}
 			}
 		});
 	});
-
-	if (arrAdd.length > 0) {
-		arrAdd.forEach((cell) => {
-			const tile = document.querySelector(`.tile-position-${cell[0]}-${cell[1]}`);
-			tile.style.transform = `translate(${cell[1] * 115}px, ${cell[0] * 115}px) scale(1.1)`;
-			setTimeout(() => tile.style = false, 200);
-		});
-	}
 };
 
 const startGame = gameMatrix => {
@@ -84,13 +76,6 @@ const startGame = gameMatrix => {
 	}
 };
 
-// remove or add class for animation
-const togleClassPosition = (iNew, jNew, i, j) => {
-	const tilePosition = document.querySelector(`.tile-position-${i}-${j}`);
-	tilePosition.classList.remove(`tile-position-${i}-${j}`);
-	tilePosition.classList.add(`tile-position-${iNew}-${jNew}`)
-};
-
 const movement = async (derection, gameMatrix) => {
 	const moveMatrix = createNewArr();
 	let checkMove = 0;
@@ -102,7 +87,21 @@ const movement = async (derection, gameMatrix) => {
 				for (let j = 0; j < 5; j++) {
 					if (gameMatrix[i][j] !== 0) {
 						moveMatrix[i][jNew] = gameMatrix[i][j];
-						togleClassPosition(i, jNew, i, j);
+
+						const tilePosition = document.querySelector(`.tile-position-${i}-${j}`);
+						const diffCell = j - jNew;
+						const duration = diffCell * 25;
+
+						animate({
+							duration: duration,
+							timing: function(timeFraction) {
+								return timeFraction;
+							},
+							draw: function(progress) {
+								tilePosition.style.transform = `translate(${(j - progress * diffCell) * 115}px, ${115 * i}px)`;
+							}
+						});
+
 						if (jNew !== j) checkMove = 1;
 						jNew++;
 					}
@@ -114,7 +113,21 @@ const movement = async (derection, gameMatrix) => {
 				for (let j = 4; j > -1; j--) {
 					if (gameMatrix[i][j] !== 0) {
 						moveMatrix[i][jNew] = gameMatrix[i][j];
-						togleClassPosition(i, jNew, i, j);
+
+						const tilePosition = document.querySelector(`.tile-position-${i}-${j}`);
+						const diffCell = jNew - j;
+						const duration = diffCell * 25;
+
+						animate({
+							duration: duration,
+							timing: function(timeFraction) {
+								return timeFraction;
+							},
+							draw: function(progress) {
+								tilePosition.style.transform = `translate(${(j + progress * diffCell) * 115}px, ${115 * i}px)`;
+							}
+						});
+
 						if (jNew !== j) checkMove = 1;
 						jNew--;
 					}
@@ -130,7 +143,21 @@ const movement = async (derection, gameMatrix) => {
 				for (let i = 0; i < 5; i++) {
 					if (gameMatrix[i][j] !== 0) {
 						moveMatrix[iNew][j] = gameMatrix[i][j];
-						togleClassPosition(iNew, j, i, j);
+
+						const tilePosition = document.querySelector(`.tile-position-${i}-${j}`);
+						const diffCell = i - iNew;
+						const duration = diffCell * 25;
+
+						animate({
+							duration: duration,
+							timing: function(timeFraction) {
+								return timeFraction;
+							},
+							draw: function(progress) {
+								tilePosition.style.transform = `translate(${115 * j}px, ${(i - progress * diffCell) * 115}px)`;
+							}
+						});
+
 						if (iNew !== i) checkMove = 1;
 						iNew++;
 					}
@@ -142,7 +169,20 @@ const movement = async (derection, gameMatrix) => {
 				for (let i = 4; i > -1; i--) {
 					if (gameMatrix[i][j] !== 0) {
 						moveMatrix[iNew][j] = gameMatrix[i][j];
-						togleClassPosition(iNew, j, i, j);
+
+						const tilePosition = document.querySelector(`.tile-position-${i}-${j}`);
+						const diffCell = iNew - i;
+						const duration = diffCell * 25;
+
+						animate({
+							duration: duration,
+							timing: function(timeFraction) {
+								return timeFraction;
+							},
+							draw: function(progress) {
+								tilePosition.style.transform = `translate(${115 * j}px, ${(i + progress * diffCell) * 115}px)`;
+							}
+						});
 						if (iNew !== i) checkMove = 1;
 						iNew--;
 					}
@@ -151,14 +191,12 @@ const movement = async (derection, gameMatrix) => {
 		}
 	}
 
-	const timeout = new Promise(resolve => {
-		setTimeout(() => resolve({moveMatrix, checkMove}), 100);
-	});
+	const timeout = new Promise(resolve => setTimeout(() => resolve({moveMatrix, checkMove}), 100));
 	const result = await timeout;
 	return result;
 };
 
-const addition = (derection, addMatrix) => {
+const addition = async (derection, addMatrix) => {
 	const arrAdd = [];
 	let checkAddition;
 
@@ -167,14 +205,39 @@ const addition = (derection, addMatrix) => {
 			if (derection === 'left') {
 				for (let j = 1; j < 5; j++) {
 					if (addMatrix[i][j - 1] === addMatrix[i][j]) {
-						if (addMatrix[i][j] !== 0) togleClassPosition(i, j - 1, i, j);
+						if (addMatrix[i][j] !== 0) {
+							const tileSum = document.querySelector(`.tile-position-${i}-${j}`);
+							const tileMove = document.querySelector(`.tile-position-${i}-${j - 1}`);
+
+							animate({
+								duration: 25,
+								timing: function(timeFraction) {
+									return timeFraction;
+								},
+								draw: function(progress) {
+									tileSum.style.transform = `translate(${(j - progress) * 115}px, ${115 * i}px)`;
+									tileMove.style.transform = `translate(${(j - 1) * 115}px, ${i * 115}px) scale(${1 + progress * 0.1})`;
+
+									if (progress === 1) {
+										animate({
+											duration: 25,
+											timing: function(timeFraction) {
+												return timeFraction;
+											},
+											draw: function(progress) {
+												tileMove.style.transform = `translate(${(j - 1) * 115}px, ${i * 115}px) scale(${1.1 - progress * 0.1})`;
+											}
+										});
+									}
+								}
+							});
+						}
 
 						addMatrix[i][j - 1] = addMatrix[i][j - 1] + addMatrix[i][j];
 
 						if (addMatrix[i][j - 1] !== 0) arrAdd.push([i, j - 1, addMatrix[i][j - 1]]);
 
 						addMatrix[i][j] = 0;
-						if (j < 4) j++;
 					}
 				}
 			}
@@ -182,14 +245,39 @@ const addition = (derection, addMatrix) => {
 			if (derection === 'right') {
 				for (let j = 3; j > -1; j--) {
 					if (addMatrix[i][j + 1] === addMatrix[i][j]) {
-						if (addMatrix[i][j] !== 0) togleClassPosition(i, j + 1, i, j);
+						if (addMatrix[i][j] !== 0) {
+							const tileSum = document.querySelector(`.tile-position-${i}-${j}`);
+							const tileMove = document.querySelector(`.tile-position-${i}-${j + 1}`);
+
+							animate({
+								duration: 25,
+								timing: function(timeFraction) {
+									return timeFraction;
+								},
+								draw: function(progress) {
+									tileSum.style.transform = `translate(${(j + progress) * 115}px, ${115 * i}px)`;
+									tileMove.style.transform = `translate(${(j + 1) * 115}px, ${i * 115}px) scale(${1 + progress * 0.1})`;
+
+									if (progress === 1) {
+										animate({
+											duration: 25,
+											timing: function(timeFraction) {
+												return timeFraction;
+											},
+											draw: function(progress) {
+												tileMove.style.transform = `translate(${(j + 1) * 115}px, ${i * 115}px) scale(${1.1 - progress * 0.1})`;
+											}
+										});
+									}
+								}
+							});
+						}
 
 						addMatrix[i][j + 1] = addMatrix[i][j + 1] + addMatrix[i][j];
 
 						if (addMatrix[i][j + 1] !== 0) arrAdd.push([i, j + 1, addMatrix[i][j + 1]]);
 
 						addMatrix[i][j] = 0;
-						if (j < 0) j--;
 					}
 				}
 			}
@@ -201,28 +289,78 @@ const addition = (derection, addMatrix) => {
 			if (derection === 'up') {
 				for (let i = 1; i < 5; i++) {
 					if (addMatrix[i - 1][j] === addMatrix[i][j]) {
-						if (addMatrix[i][j] !== 0) togleClassPosition(i - 1, j, i, j);
+						if (addMatrix[i][j] !== 0) {
+							const tileSum = document.querySelector(`.tile-position-${i}-${j}`);
+							const tileMove = document.querySelector(`.tile-position-${i - 1}-${j}`);
+
+							animate({
+								duration: 25,
+								timing: function(timeFraction) {
+									return timeFraction;
+								},
+								draw: function(progress) {
+									tileSum.style.transform = `translate(${j * 115}px, ${(i - progress) * 115}px)`;
+									tileMove.style.transform = `translate(${j * 115}px, ${(i - 1) * 115}px) scale(${1 + progress * 0.1})`;
+
+									if (progress === 1) {
+										animate({
+											duration: 25,
+											timing: function(timeFraction) {
+												return timeFraction;
+											},
+											draw: function(progress) {
+												tileMove.style.transform = `translate(${j * 115}px, ${(i - 1) * 115}px) scale(${1.1 - progress * 0.1})`;
+											}
+										});
+									}
+								}
+							});
+						}
 
 						addMatrix[i - 1][j] = addMatrix[i - 1][j] + addMatrix[i][j];
 
 						if (addMatrix[i - 1][j] !== 0) arrAdd.push([i - 1, j, addMatrix[i - 1][j]]);
 
 						addMatrix[i][j] = 0;
-						if (i < 4) i++;
 					}
 				}
 			}
 			if (derection === 'down') {
 				for (let i = 3; i > -1; i--) {
 					if (addMatrix[i + 1][j] === addMatrix[i][j]) {
-						if (addMatrix[i][j] !== 0) togleClassPosition(i + 1, j, i, j);
+						if (addMatrix[i][j] !== 0) {
+							const tileSum = document.querySelector(`.tile-position-${i}-${j}`);
+							const tileMove = document.querySelector(`.tile-position-${i + 1}-${j}`);
+
+							animate({
+								duration: 25,
+								timing: function(timeFraction) {
+									return timeFraction;
+								},
+								draw: function(progress) {
+									tileSum.style.transform = `translate(${j * 115}px, ${(i + progress) * 115}px)`;
+									tileMove.style.transform = `translate(${j * 115}px, ${(i + 1) * 115}px) scale(${1 + progress * 0.1})`;
+
+									if (progress === 1) {
+										animate({
+											duration: 25,
+											timing: function(timeFraction) {
+												return timeFraction;
+											},
+											draw: function(progress) {
+												tileMove.style.transform = `translate(${j * 115}px, ${(i + 1) * 115}px) scale(${1.1 - progress * 0.1})`;
+											}
+										});
+									}
+								}
+							});
+						}
 
 						addMatrix[i + 1][j] = addMatrix[i + 1][j] + addMatrix[i][j];
 
 						if (addMatrix[i + 1][j] !== 0) arrAdd.push([i + 1, j, addMatrix[i + 1][j]]);
 
 						addMatrix[i][j] = 0;
-						if (i < 0) i--;
 					}
 				}
 			}
@@ -231,7 +369,9 @@ const addition = (derection, addMatrix) => {
 
 	arrAdd.length > 0 ? checkAddition = 1 : checkAddition = 0;
 
-	return {addMatrix, checkAddition, arrAdd};
+	const timeout = new Promise(resolve => setTimeout(() => resolve({addMatrix, checkAddition, arrAdd}), 50));
+	const result = await timeout;
+	return result;
 };
 
 export const moveInGame = async (direction) => {
@@ -245,7 +385,7 @@ export const moveInGame = async (direction) => {
 	clianingContainer();
 	renderGameMatrix(gameMatrixFutureState);
 
-	const {addMatrix, checkAddition, arrAdd} = addition(direction, gameMatrixFutureState);
+	const {addMatrix, checkAddition, arrAdd} = await addition(direction, gameMatrixFutureState);
 
 	copyGameMatrix(addMatrix, gameMatrixFutureState);
 
@@ -253,7 +393,7 @@ export const moveInGame = async (direction) => {
 		scoreGame.addScore(arrAdd.reduce((sum, current) => sum + current[2], 0));
 
 		clianingContainer();
-		renderGameMatrix(gameMatrixFutureState, arrAdd.length > 0 ? arrAdd : []);
+		renderGameMatrix(gameMatrixFutureState);
 
 		const {moveMatrix} = await movement(direction, gameMatrixFutureState);
 		copyGameMatrix(moveMatrix, gameMatrixFutureState);
@@ -286,6 +426,7 @@ export const moveInGame = async (direction) => {
 
 	clianingContainer();
 	renderGameMatrix(player.gameMatrix);
+
 
 	if (arrAdd.find(item => item[2] === 8) && !player.bestTime) { // !!!!!!!!!!!!!
 		keepPlaying = new KeepPlaying();
