@@ -25,9 +25,6 @@
     justify-content: center;
     text-align: center;
 
-    // animation: fade-in 800ms ease 1200ms;
-    // animation-fill-mode: both;
-
     &_active {
       display: flex;
     }
@@ -35,7 +32,6 @@
     &__text {
       font-size: 60px;
       font-weight: 700;
-      height: 60px;
       line-height: 60px;
     }
 
@@ -83,8 +79,6 @@
     }
   }
 
-  // animation-fill-mode: backwards;
-  // animation: pop 200ms ease 100ms;
   .tile-container {
     position: absolute;
     top: 15px;
@@ -102,9 +96,6 @@
       height: 100px;
       border-radius: 3px;
 
-      // transition: 100ms ease-in-out;
-      // transition-property: transform;
-
       .tile-inner {
         border-radius: 3px;
         line-height: 100px;
@@ -112,270 +103,54 @@
       }
     }
 
-    .tile-2 {
-      background: #eee4da;
-      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+    @mixin tileMixin($tileWeight, $backgroundTile, $colorCheck, $shadowCheck, $colorTile, $shadowTile, $shadowTileInsert) {
+      .tile-#{$tileWeight} {
+        background: #{$backgroundTile};
+
+        @if ($colorCheck == true) {
+          color: #{$colorTile};
+        }
+
+        @if ($shadowCheck == true) {
+          box-shadow: 0 0 30px 10px #{$shadowTile}, inset 0 0 0 1px #{$shadowTileInsert};
+        }
+      }
     }
 
-    .tile-4 {
-      background: #ede0c8;
-      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+    $tileProps: (
+      2: ('#eee4da', false, true, 0, rgba(243, 215, 116, 0), rgba(255, 255, 255, 0)),
+      4: ('#ede0c8', false, true, 0, rgba(243, 215, 116, 0), rgba(255, 255, 255, 0)),
+      8: ('#f2b179', true, false, '#f9f6f2', 0, 0),
+      16: ('#f59563', true, false, '#f9f6f2', 0, 0),
+      32: ('#f67c5f', true, false, '#f9f6f2', 0, 0),
+      64: ('#f65e3b', true, false, '#f9f6f2', 0, 0),
+      128: ('#edcf72', true, true, '#f9f6f2', rgba(243, 215, 116, 0.2381), rgba(255, 255, 255, 0.14286)),
+      256: ('#edcc61', true, true, '#f9f6f2', rgba(243, 215, 116, 0.31746), rgba(255, 255, 255, 0.19048)),
+      512: ('#edc850', true, true, '#f9f6f2', rgba(243, 215, 116, 0.39683), rgba(255, 255, 255, 0.2381)),
+      1024: ('#edc53f', true, true, '#f9f6f2', rgba(243, 215, 116, 0.47619), rgba(255, 255, 255, 0.28571)),
+      2048: ('#edc22e', true, true, '#f9f6f2', rgba(243, 215, 116, 0.55556), rgba(255, 255, 255, 0.33333)),
+      4096: ('#ebb914', true, true, '#f9f6f2', rgba(243, 215, 116, 0.63556), rgba(255, 255, 255, 0.33333)),
+      8192: ('#d3a612', true, true, '#f9f6f2', rgba(243, 215, 116, 0.71556), rgba(255, 255, 255, 0.33333)),
+      16384: ('#bc9410', true, true, '#f9f6f2', rgba(243, 215, 116, 0.71556), rgba(255, 255, 255, 0.33333)),
+      32768: ('#bc8310', true, true, '#f9f6f2', rgba(243, 215, 116, 0.79556), rgba(255, 255, 255, 0.33333)),
+      65536: ('#bc6c10', true, true, '#f9f6f2', rgba(243, 215, 116, 0.79556), rgba(255, 255, 255, 0.33333)),
+      131072: ('#bc5510', true, true, '#f9f6f2', rgba(243, 215, 116, 0.79556), rgba(255, 255, 255, 0.33333)),
+      262144: ('#bc3e10', true, true, '#f9f6f2', rgba(243, 215, 116, 0.79556), rgba(255, 255, 255, 0.33333)),
+      524288: ('#bc2a10', true, true, '#f9f6f2', rgba(243, 215, 116, 0.79556), rgba(255, 255, 255, 0.33333)),
+      1048576: ('#bc1010', true, true, '#f9f6f2', rgba(243, 215, 116, 0.79556), rgba(255, 255, 255, 0.33333)),
+    );
+
+    @each $tile, $tileProp in $tileProps {
+      @include tileMixin($tile, nth($tileProp, 1), nth($tileProp, 2), nth($tileProp, 3), nth($tileProp, 4), nth($tileProp, 5), nth($tileProp, 6))
     }
 
-    .tile-8 {
-      color: #f9f6f2;
-      background: #f2b179; 
+    @for $i from 0 through 4 {
+      @for $j from 0 through 4 {
+        .tile-position-#{$i}-#{$j} {
+          transform: translate(#{$j * 115}px, #{$i * 115}px);
+        }
+      }
     }
-
-    .tile-16 {
-      color: #f9f6f2;
-      background: #f59563;
-    }
-
-    .tile-32 {
-      color: #f9f6f2;
-      background: #f67c5f;
-    }
-
-    .tile-64 {
-      color: #f9f6f2;
-      background: #f65e3b;
-    }
-
-    .tile-128 {
-      color: #f9f6f2;
-      background: #edcf72;
-      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.2381), inset 0 0 0 1px rgba(255, 255, 255, 0.14286);
-    }
-
-    .tile-256 {
-      color: #f9f6f2;
-      background: #edcc61;
-      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.31746), inset 0 0 0 1px rgba(255, 255, 255, 0.19048);
-    }
-
-    .tile-512 {
-      color: #f9f6f2;
-      background: #edc850;
-      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.39683), inset 0 0 0 1px rgba(255, 255, 255, 0.2381);
-    }
-
-    .tile-1024 {
-      color: #f9f6f2;
-      background: #edc53f;
-      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.47619), inset 0 0 0 1px rgba(255, 255, 255, 0.28571);
-    }
-
-    .tile-2048 {
-      color: #f9f6f2;
-      background: #edc22e;
-      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.55556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
-    }
-
-    .tile-4096 {
-      color: #f9f6f2;
-      background: #ebb914;
-      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.63556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
-    }
-
-    .tile-8192 {
-      color: #f9f6f2;
-      background: #d3a612;
-      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.71556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
-    }
-
-    .tile-16384 {
-      color: #f9f6f2;
-      background: #bc9410;
-      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.79556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
-    }
-
-    .tile-32768 {
-      color: #f9f6f2;
-      background: #bc9410;
-      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.79556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
-    }
-
-    .tile-65536 {
-      color: #f9f6f2;
-      background: #bc9410;
-      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.79556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
-    }
-
-    .tile-131072 {
-      color: #f9f6f2;
-      background: #bc9410;
-      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.79556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
-    }
-
-    .tile-262144 {
-      color: #f9f6f2;
-      background: #bc9410;
-      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.79556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
-    }
-
-    .tile-524288 {
-      color: #f9f6f2;
-      background: #bc9410;
-      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.79556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
-    }
-
-    .tile-1048576 {
-      color: #f9f6f2;
-      background: #bc9410;
-      box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.79556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
-    }
-
-    .tile-position-0-0 {
-      transform: translate(0px, 0px);
-      // top: 0;
-      // left: 0;
-    }
-
-    .tile-position-0-1 {
-      transform: translate(115px, 0px);
-      // top: 0;
-      // left: 115px;
-    }
-
-    .tile-position-0-2 {
-      transform: translate(230px, 0px);
-      // top: 0;
-      // left: 230px;
-    }
-
-    .tile-position-0-3 {
-      transform: translate(345px, 0px);
-      // top: 0;
-      // left: 345px;
-    }
-
-    .tile-position-0-4 {
-      transform: translate(460px, 0px);
-      // top: 0;
-      // left: 460px;
-    }
-
-    .tile-position-1-0 {
-      transform: translate(0px, 115px);
-      // top: 115px;
-      // left: 0;
-    }
-
-    .tile-position-1-1 {
-      transform: translate(115px, 115px);
-      // top: 115px;
-      // left: 115px;
-    }
-
-    .tile-position-1-2 {
-      transform: translate(230px, 115px);
-      // top: 115px;
-      // left: 230px;
-    }
-
-    .tile-position-1-3 {
-      transform: translate(345px, 115px);
-      // top: 115px;
-      // left: 345px;
-    }
-
-    .tile-position-1-4 {
-      transform: translate(460px, 115px);
-      // top: 115px;
-      // left: 460px;
-    }
-
-    .tile-position-2-0 {
-      transform: translate(0px, 230px);
-      // top: 230px;
-      // left: 0;
-    }
-
-    .tile-position-2-1 {
-      transform: translate(115px, 230px);
-      // top: 230px;
-      // left: 115px;
-    }
-
-    .tile-position-2-2 {
-      transform: translate(230px, 230px);
-      // top: 230px;
-      // left: 230px;
-    }
-
-    .tile-position-2-3 {
-      transform: translate(345px, 230px);
-      // top: 230px;
-      // left: 345px;
-    }
-
-    .tile-position-2-4 {
-      transform: translate(460px, 230px);
-      // top: 230px;
-      // left: 460px;
-    }
-
-    .tile-position-3-0 {
-      transform: translate(0px, 345px);
-      // top: 345px;
-      // left: 0;
-    }
-
-    .tile-position-3-1 {
-      transform: translate(115px, 345px);
-      // top: 345px;
-      // left: 115px;
-    }
-
-    .tile-position-3-2 {
-      transform: translate(230px, 345px);
-      // top: 345px;
-      // left: 230px;
-    }
-
-    .tile-position-3-3 {
-      transform: translate(345px, 345px);
-      // top: 345px;
-      // left: 345px;
-    }
-
-    .tile-position-3-4 {
-      transform: translate(460px, 345px);
-      // top: 345px;
-      // left: 460px;
-    }
-
-    .tile-position-4-0 {
-      transform: translate(0px, 460px);
-      // top: 460px;
-      // left: 0;
-    }
-
-    .tile-position-4-1 {
-      transform: translate(115px, 460px);
-      // top: 460px;
-      // left: 115px;
-    }
-
-    .tile-position-4-2 {
-      transform: translate(230px, 460px);
-      // top: 460px;
-      // left: 230px;
-    }
-
-    .tile-position-4-3 {
-      transform: translate(345px, 460px);
-      // top: 460px;
-      // left: 345px;
-    }
-
-    .tile-position-4-4 {
-      transform: translate(460px, 460px);
-      // top: 460px;
-      // left: 460px;
-    }
-
   }
 }
 
