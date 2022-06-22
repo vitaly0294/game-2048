@@ -40,8 +40,8 @@ export const eventHendlers = () => {
 
 			if (target.matches('.back-step-btn') && btnBackStep.checkBackStep) {
 				btnBackStep.backStep();
-				keepPlaying ? keepPlaying.removeKeepPlaying() : '';
-				tryAgain ? tryAgain.removeTryAgain() : '';
+				if (keepPlaying) keepPlaying.removeKeepPlaying();
+				if (tryAgain) tryAgain.removeTryAgain();
 
 				check.press = 0;
 				player.numMov = 0;
@@ -67,13 +67,14 @@ export const eventHendlers = () => {
 				}
 
 				start('restart');
-				keepPlaying ? keepPlaying.removeKeepPlaying() : '';
-				tryAgain ? tryAgain.removeTryAgain() : '';
+
+				if (keepPlaying) keepPlaying.removeKeepPlaying();
+				if (tryAgain) tryAgain.removeTryAgain();
+
 				check.press = 0;
 			}
 
-			if (target.matches('.authentication__icon') ||
-					target.closest('.authentication__name')) {
+			if (target.matches('.authentication__icon') || target.closest('.authentication__name')) {
 				authentication.setNewPlayer();
 			}
 		})
@@ -89,11 +90,8 @@ export const eventHendlers = () => {
 				if (e.key === 'ArrowRight') moveInGame('right');
 			}
 
-			if (e.key === 'ArrowUp'||
-					e.key === 'ArrowDown' ||
-					e.key === 'ArrowLeft' ||
-					e.key === 'ArrowRight') {
-				timeGame.startTimeGame ? '' : timeGame.setStartTimeGame();
+			if (e.key === 'ArrowUp'|| e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+				if (!timeGame.startTimeGame) timeGame.setStartTimeGame();
 			}
 		});
 	};
