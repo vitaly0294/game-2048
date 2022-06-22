@@ -9,6 +9,7 @@ import {
 	resultsTable
 } from './game.js';
 
+import {scoreGame} from './scoreGame.js';
 import {timeGame} from './timeGame.js';
 import {btnBackStep} from './btn.js';
 import {authentication} from './authentication.js';
@@ -61,6 +62,8 @@ export const eventHendlers = () => {
 
 					localStorageGame.set('table', resultsTable);
 					sortTable();
+					scoreGame.updateScoreTopPlay(resultsTable);
+					timeGame.updateTimeTopPlay(resultsTable);
 				}
 
 				start('restart');

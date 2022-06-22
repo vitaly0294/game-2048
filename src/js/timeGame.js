@@ -47,4 +47,13 @@ export const timeGame = {
 	updateTime(mode) {
 		this.timePlayBlock.textContent = mode ? this.getTimeGameString(this.timePlayOld) : this.getTimeGameString(this.timePlay);
 	},
+
+	findTimeTopPlay(table) {
+		this.timeTopPlay = table.sort((a, b) => a[2] - b[2])[0][2];
+	},
+
+	updateTimeTopPlay(table) {
+		this.findTimeTopPlay(table);
+		this.timeBestPlayBlock.textContent = this.getTimeGameString(this.timeTopPlay);
+	}
 }

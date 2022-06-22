@@ -25,5 +25,14 @@ export const scoreGame = {
 
 	updateScore(mode) {
 		this.scorePlayBlock.textContent = mode ? `${this.scorePlayPrev}` : `${this.scorePlay}`;
+	},
+
+	findScoreTopPlay(table) {
+		this.scoreTopPlay = table.sort((a, b) => b[3] - a[3])[0][3];
+	},
+
+	updateScoreTopPlay(table) {
+		this.findScoreTopPlay(table);
+		this.scoreTopPlayBlock.textContent = this.scoreTopPlay;
 	}
 }

@@ -290,7 +290,6 @@ export const moveInGame = async (direction) => {
 	clianingContainer();
 	renderGameMatrix(player.gameMatrix);
 
-
 	if (arrAdd.find(item => item[2] === 8) && !player.bestTime) { // !!!!!!!!!!!!!
 		keepPlaying = new KeepPlaying();
 		keepPlaying.setKeepPlaying();
@@ -339,7 +338,6 @@ export const start = mode => {
 	renderGameMatrix(player.gameMatrix);
 };
 
-
 export const game = () => {
 	if (localStorageGame.check('game')) {
 		const {
@@ -359,9 +357,11 @@ export const game = () => {
 			name,
 			score,
 			scorePrevState,
-			time, gameMatrix,
+			time,
+			gameMatrix,
 			gameMatrixPrevState,
-			bestScore, bestTime,
+			bestScore,
+			bestTime,
 			id,
 			numMov
 		});
@@ -375,6 +375,8 @@ export const game = () => {
 	if (localStorageGame.check('table')) {
 		resultsTable = localStorageGame.get('table');
 		renderTable();
+		scoreGame.updateScoreTopPlay(resultsTable);
+		timeGame.updateTimeTopPlay(resultsTable);
 	}
 
 	eventHendlers();
