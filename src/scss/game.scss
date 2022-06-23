@@ -1,0 +1,156 @@
+.game-container {
+  position: relative;
+
+  padding: 15px;
+  width: 590px;
+  height: 590px;
+
+  background: #bbada0;
+  border-radius: 6px;
+
+  touch-action: none;
+  user-select: none;
+
+  .game-message {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(238, 228, 218, 0.73);
+    z-index: 100;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    &_active {
+      display: flex;
+    }
+
+    &__text {
+      font-size: 60px;
+      font-weight: 700;
+      line-height: 60px;
+    }
+
+    &__btn {
+      margin-top: 29px;
+
+      .retry-btn, .keep-playing-btn {
+        display: none;
+        background: #8f7a66;
+        border-radius: 3px;
+        padding: 10px 20px;
+        text-decoration: none;
+        color: #f9f6f2;
+        line-height: 42px;
+        text-align: center;
+        font-size: 30px;
+        cursor: pointer;
+      }
+
+      .retry-btn_active {
+        display: block;
+      }
+
+      .keep-playing-btn_active {
+        display: block;
+      }
+    }
+  }
+
+  .grid-container {
+
+    .grid-row {
+      display: flex;
+      justify-content: space-between;
+  
+      margin-bottom: 15px;
+      height: 100px;
+    }
+
+    .grid-cell {
+      width: 100px;
+  
+      border-radius: 3px;
+      background: rgba(238, 228, 218, 0.35);
+    }
+  }
+
+  .tile-container {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 560px;
+    height: 560px;
+
+    .tile {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      width: 100px;
+      height: 100px;
+      border-radius: 3px;
+
+      .tile-inner {
+        border-radius: 3px;
+        line-height: 100px;
+        font-weight: bold;
+      }
+    }
+
+    @mixin tileMixin($tileWeight, $backgroundTile, $colorCheck, $shadowCheck, $colorTile, $shadowTile, $shadowTileInsert) {
+      .tile-#{$tileWeight} {
+        background: #{$backgroundTile};
+
+        @if ($colorCheck == true) {
+          color: #{$colorTile};
+        }
+
+        @if ($shadowCheck == true) {
+          box-shadow: 0 0 30px 10px #{$shadowTile}, inset 0 0 0 1px #{$shadowTileInsert};
+        }
+      }
+    }
+
+    $tileProps: (
+      2: ('#eee4da', false, true, 0, rgba(243, 215, 116, 0), rgba(255, 255, 255, 0)),
+      4: ('#ede0c8', false, true, 0, rgba(243, 215, 116, 0), rgba(255, 255, 255, 0)),
+      8: ('#f2b179', true, false, '#f9f6f2', 0, 0),
+      16: ('#f59563', true, false, '#f9f6f2', 0, 0),
+      32: ('#f67c5f', true, false, '#f9f6f2', 0, 0),
+      64: ('#f65e3b', true, false, '#f9f6f2', 0, 0),
+      128: ('#edcf72', true, true, '#f9f6f2', rgba(243, 215, 116, 0.2381), rgba(255, 255, 255, 0.14286)),
+      256: ('#edcc61', true, true, '#f9f6f2', rgba(243, 215, 116, 0.31746), rgba(255, 255, 255, 0.19048)),
+      512: ('#edc850', true, true, '#f9f6f2', rgba(243, 215, 116, 0.39683), rgba(255, 255, 255, 0.2381)),
+      1024: ('#edc53f', true, true, '#f9f6f2', rgba(243, 215, 116, 0.47619), rgba(255, 255, 255, 0.28571)),
+      2048: ('#edc22e', true, true, '#f9f6f2', rgba(243, 215, 116, 0.55556), rgba(255, 255, 255, 0.33333)),
+      4096: ('#ebb914', true, true, '#f9f6f2', rgba(243, 215, 116, 0.63556), rgba(255, 255, 255, 0.33333)),
+      8192: ('#d3a612', true, true, '#f9f6f2', rgba(243, 215, 116, 0.71556), rgba(255, 255, 255, 0.33333)),
+      16384: ('#bc9410', true, true, '#f9f6f2', rgba(243, 215, 116, 0.71556), rgba(255, 255, 255, 0.33333)),
+      32768: ('#bc8310', true, true, '#f9f6f2', rgba(243, 215, 116, 0.79556), rgba(255, 255, 255, 0.33333)),
+      65536: ('#bc6c10', true, true, '#f9f6f2', rgba(243, 215, 116, 0.79556), rgba(255, 255, 255, 0.33333)),
+      131072: ('#bc5510', true, true, '#f9f6f2', rgba(243, 215, 116, 0.79556), rgba(255, 255, 255, 0.33333)),
+      262144: ('#bc3e10', true, true, '#f9f6f2', rgba(243, 215, 116, 0.79556), rgba(255, 255, 255, 0.33333)),
+      524288: ('#bc2a10', true, true, '#f9f6f2', rgba(243, 215, 116, 0.79556), rgba(255, 255, 255, 0.33333)),
+      1048576: ('#bc1010', true, true, '#f9f6f2', rgba(243, 215, 116, 0.79556), rgba(255, 255, 255, 0.33333)),
+    );
+
+    @each $tile, $tileProp in $tileProps {
+      @include tileMixin($tile, nth($tileProp, 1), nth($tileProp, 2), nth($tileProp, 3), nth($tileProp, 4), nth($tileProp, 5), nth($tileProp, 6))
+    }
+
+    @for $i from 0 through 4 {
+      @for $j from 0 through 4 {
+        .tile-position-#{$i}-#{$j} {
+          transform: translate(#{$j * 115}px, #{$i * 115}px);
+        }
+      }
+    }
+  }
+}
+
