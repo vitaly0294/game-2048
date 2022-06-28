@@ -1,17 +1,17 @@
 export const localStorageGame = {
-	set(key, value) {
-		localStorage.setItem(key, JSON.stringify(value))
-	},
+  set(key, value) {
+    localStorage.setItem(key, JSON.stringify(value))
+  },
 
-	get(key) {
-		return JSON.parse(localStorage.getItem(key));
-	},
+  get(key) {
+    return JSON.parse(localStorage.getItem(key));
+  },
 
-	check(key) {
-		return JSON.parse(localStorage.getItem(key)) ? true : false;
-	},
+  check(key) {
+    return JSON.parse(localStorage.getItem(key)) ? true : false;
+  },
 
-	remove(key) {
-		localStorage.removeItem(key);
-	}
+  remove(key) {
+    localStorage.removeItem(key);
+  }
 }

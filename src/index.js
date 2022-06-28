@@ -9,10 +9,10 @@ import {layoutTable} from './js/layout/layoutTable.js';
 import {game} from '/js/game.js';
 
 window.addEventListener('DOMContentLoaded', () => {
-	layoutHeader();
-	layoutControl();
-	layoutGame();
-	layoutTable();
+  layoutHeader();
+  layoutControl();
+  layoutGame();
+  layoutTable();
 
-	game();
+  game();
 });
