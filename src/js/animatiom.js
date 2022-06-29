@@ -1,5 +1,12 @@
+import {
+  left,
+  right,
+  up,
+  down,
+} from './constants';
+
 /* eslint-disable max-len */
-export const buildAnimate = ({duration, draw, timing}) => {
+const buildAnimate = ({duration, draw, timing}) => {
   const start = performance.now();
 
   requestAnimationFrame(function animate(time) {
@@ -28,11 +35,11 @@ export const createAnimateMove = (baseAnimationTime, i, j, diffCell, direction) 
       return 1 - Math.sin(Math.acos(timeFraction));
     },
     draw: function(progress) {
-      if (direction === 'left' || direction === 'right') {
+      if (direction === left || direction === right) {
         tilePosition.style.transform = `translate(${(j + progress * diffCell) * 115}px, ${115 * i}px)`;
       }
 
-      if (direction === 'up' || direction === 'down') {
+      if (direction === up || direction === down) {
         tilePosition.style.transform = `translate(${115 * j}px, ${(i + progress * diffCell) * 115}px)`;
       }
     }
@@ -43,11 +50,11 @@ export const createAnimateAdd = (baseAnimationTime, i, j, diffCell, direction) =
   const tileSum = document.querySelector(`.tile-position-${i}-${j}`);
   let tileMove;
 
-  if (direction === 'left' || direction === 'right') {
+  if (direction === left || direction === right) {
     tileMove = document.querySelector(`.tile-position-${i}-${j + diffCell}`);
   }
 
-  if (direction === 'up' || direction === 'down') {
+  if (direction === up || direction === down) {
     tileMove = document.querySelector(`.tile-position-${i + diffCell}-${j}`);
   }
   const duration = Math.abs(diffCell) * baseAnimationTime;
@@ -58,7 +65,7 @@ export const createAnimateAdd = (baseAnimationTime, i, j, diffCell, direction) =
       return timeFraction;
     },
     draw: function(progress) {
-      if (direction === 'left' || direction === 'right') {
+      if (direction === left || direction === right) {
         tileSum.style.transform = `translate(${(j + progress * diffCell) * 115}px, ${115 * i}px)`;
         tileMove.style.transform = `translate(${(j + diffCell) * 115}px, ${i * 115}px) scale(${1 + progress * 0.1})`;
 
@@ -75,7 +82,7 @@ export const createAnimateAdd = (baseAnimationTime, i, j, diffCell, direction) =
         }
       }
 
-      if (direction === 'up' || direction === 'down') {
+      if (direction === up || direction === down) {
         tileSum.style.transform = `translate(${115 * j}px, ${(i + progress * diffCell) * 115}px)`;
         tileMove.style.transform = `translate(${j * 115}px, ${(i + diffCell) * 115}px) scale(${1 + progress * 0.1})`;
 
@@ -87,7 +94,7 @@ export const createAnimateAdd = (baseAnimationTime, i, j, diffCell, direction) =
             },
             draw: function(progress) {
 						  tileMove.style.transform = `translate(${j * 115}px, ${(i + diffCell) * 115}px) scale(${1.1 - progress * 0.1})`;
-					  }
+            }
           });
         }
       }

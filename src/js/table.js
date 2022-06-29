@@ -32,7 +32,7 @@ export const renderTable = () => {
   });
 };
 
-export const clianingTable = () => {
+const clearTable = () => {
   const line = document.querySelectorAll('.line');
   line.forEach(item => item.remove());
 };
@@ -48,7 +48,7 @@ export const sortTable = (unit = '') => {
   }
   if (unit === 'time') resultsTable.sort((a, b) => a[2] - b[2]);
   if (unit === 'score') resultsTable.sort((a, b) => b[3] - a[3]);
-  clianingTable();
+  clearTable();
   renderTable();
 
   const column = document.querySelectorAll('.column');

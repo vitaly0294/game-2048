@@ -62,10 +62,6 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: path.resolve(__dirname, 'server.php'),
-          to: path.resolve(__dirname, 'dist')
-        },
-        {
           from: path.resolve(__dirname, 'src/assets/img'),
           to: path.resolve(__dirname, 'dist')
         }

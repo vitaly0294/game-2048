@@ -1,21 +1,21 @@
-import {btnBackStep} from '../btn.js'
+import {buttonBackStep} from '../button.js'
 
-export const layoutControl = () => {
+export const createLayoutControlBlock = () => {
   const header = document.querySelector('.header');
-  const resBtnContainer = document.createElement('div');
-  const restartBtn = document.createElement('a');
+  const restartButtonContainer = document.createElement('div');
+  const restartButton = document.createElement('a');
   const backStep = document.createElement('a');
 
-  resBtnContainer.className = 'btn-container';
-  restartBtn.className = 'restart-btn restart-btn_active';
+  restartButtonContainer.className = 'btn-container';
+  restartButton.className = 'restart-btn restart-btn_active';
   backStep.className = 'back-step-btn';
 
-  header.after(resBtnContainer);
-  resBtnContainer.append(restartBtn);
-  resBtnContainer.append(backStep);
+  header.after(restartButtonContainer);
+  restartButtonContainer.append(restartButton);
+  restartButtonContainer.append(backStep);
 
-  restartBtn.textContent = 'New Game';
+  restartButton.textContent = 'New Game';
   backStep.textContent = 'Back Step';
 
-  btnBackStep.btn = backStep;
+  buttonBackStep.block = backStep;
 };

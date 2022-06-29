@@ -1,62 +1,49 @@
-class GameMessage {
-  constructor({
-    gameMessage = '.game-message',
-    textMessage = '.game-message__text',
-  } = {}) {
-    this.gameMessage = document.querySelector(gameMessage);
-    this.textMessage = document.querySelector(textMessage);
-  }
+let gameMessage;
+let textMessage;
+let retryButton;
+let keepPlayingButton;
 
+const setMessageActive = () => {
+  gameMessage = document.querySelector('.game-message');
+  textMessage = document.querySelector('.game-message__text');
+  gameMessage.classList.add('game-message_active');
+}
+
+const removeMessageActive = () => {
+  gameMessage.classList.remove('game-message_active');
+  textMessage.textContent = '';
+}
+
+export const tryAgain = {
+  check: 0,
   set() {
-    this.gameMessage.classList.add('game-message_active');
-  }
+    setMessageActive();
+    retryButton = document.querySelector('.retry-btn');
+    retryButton.classList.add('retry-btn_active');
+    textMessage.textContent = 'Game Over';
+    this.check = 1;
+  },
 
   remove() {
-    this.gameMessage.classList.remove('game-message_active');
-    this.textMessage.textContent = '';
+    removeMessageActive();
+    retryButton.classList.remove('retry-btn_active');
+    this.check = 0;
   }
 }
 
-export class TryAgain extends GameMessage {
-  constructor({
-    gameMessage,
-    textMessage,
-    retryBtn = '.retry-btn'
-  } = {}) {
-    super(gameMessage, textMessage);
-    this.retryBtn = document.querySelector(retryBtn);
-  }
+export const keepPlaying = {
+  check: 0,
+  set() {
+    setMessageActive();
+    keepPlayingButton = document.querySelector('.keep-playing-btn');
+    keepPlayingButton.classList.add('keep-playing-btn_active');
+    textMessage.textContent = 'Do you want to continue?';
+    this.check = 1;
+  },
 
-  setTryAgain() {
-    super.set();
-    this.retryBtn.classList.add('retry-btn_active');
-    this.textMessage.textContent = 'Game Over';
-  }
-
-  removeTryAgain() {
-    super.remove();
-    this.retryBtn.classList.remove('retry-btn_active');
-  }
-}
-
-export class KeepPlaying extends GameMessage {
-  constructor({
-    gameMessage,
-    textMessage,
-    keepPlayingBtn = '.keep-playing-btn',
-  } = {}) {
-    super(gameMessage, textMessage);
-    this.keepPlayingBtn = document.querySelector(keepPlayingBtn);
-  }
-
-  setKeepPlaying() {
-    super.set();
-    this.keepPlayingBtn.classList.add('keep-playing-btn_active');
-    this.textMessage.textContent = 'Do you want to continue?';
-  }
-
-  removeKeepPlaying() {
-    super.remove();
-    this.keepPlayingBtn.classList.remove('keep-playing-btn_active');
+  remove() {
+    removeMessageActive();
+    keepPlayingButton.classList.remove('keep-playing-btn_active');
+    this.check = 0;
   }
 }

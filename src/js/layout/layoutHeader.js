@@ -1,7 +1,7 @@
 import {scoreGame} from '../scoreGame.js';
 import {timeGame} from '../timeGame.js'
 
-export const layoutHeader = () => {
+export const createLayoutHeaderBlock = () => {
   const container = document.querySelector('.container');
 
   const header = document.createElement('div');

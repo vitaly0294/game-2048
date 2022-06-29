@@ -1,23 +1,37 @@
 /* eslint-disable max-len */
 import {
-  start,
-  moveInGame,
+  left,
+  right,
+  up,
+  down,
+  arrowUp,
+  arrowDown,
+  arrowLeft,
+  arrowRight
+} from './constants';
+
+import {
+  generateGame,
+  makeMoveInGame,
   check,
-  keepPlaying,
-  tryAgain,
   player,
   resultsTable
 } from './game.js';
 
+import {
+  keepPlaying,
+  tryAgain
+} from './message.js';
+
 import {scoreGame} from './scoreGame.js';
 import {timeGame} from './timeGame.js';
-import {btnBackStep} from './btn.js';
+import {buttonBackStep} from './button.js';
 import {authentication} from './authentication.js';
 import {localStorageGame} from './localStorage.js';
 
 import {sortTable} from './table.js';
 
-export const eventHendlers = () => {
+export const askEventHendlers = () => {
   const body = document.querySelector('body');
   const container = body.querySelector('.container');
   const gameContainer = container.querySelector('.game-container');
@@ -34,14 +48,14 @@ export const eventHendlers = () => {
       if (target.matches('.player-score')) sortTable('score');
 
       if (target.matches('.keep-playing-btn')) {
-        keepPlaying.removeKeepPlaying();
+        keepPlaying.remove();
         check.press = 0;
       }
 
-      if (target.matches('.back-step-btn') && btnBackStep.checkBackStep) {
-        btnBackStep.backStep();
-        if (keepPlaying) keepPlaying.removeKeepPlaying();
-        if (tryAgain) tryAgain.removeTryAgain();
+      if (target.matches('.back-step-btn') && buttonBackStep.check) {
+        buttonBackStep.useBackStep();
+        if (keepPlaying.check) keepPlaying.remove();
+        if (tryAgain.check) tryAgain.remove();
 
         check.press = 0;
         player.numMov = 0;
@@ -66,10 +80,10 @@ export const eventHendlers = () => {
           timeGame.updateTimeTopPlay(resultsTable);
         }
 
-        start('restart');
+        generateGame('restart');
 
-        if (keepPlaying) keepPlaying.removeKeepPlaying();
-        if (tryAgain) tryAgain.removeTryAgain();
+        if (keepPlaying.check) keepPlaying.remove();
+        if (tryAgain.check) tryAgain.remove();
 
         check.press = 0;
       }
@@ -83,14 +97,14 @@ export const eventHendlers = () => {
   const addEventKeyboard = () => {
     document.addEventListener('keydown', e => {
       if (check.press === 0) {
-        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') e.preventDefault();
-        if (e.key === 'ArrowUp') moveInGame('up');
-        if (e.key === 'ArrowDown') moveInGame('down');
-        if (e.key === 'ArrowLeft') moveInGame('left');
-        if (e.key === 'ArrowRight') moveInGame('right');
+        if (e.key === arrowUp || e.key === arrowDown) e.preventDefault();
+        if (e.key === arrowUp) makeMoveInGame(up);
+        if (e.key === arrowDown) makeMoveInGame(down);
+        if (e.key === arrowLeft) makeMoveInGame(left);
+        if (e.key === arrowRight) makeMoveInGame(right);
       }
 
-      if (e.key === 'ArrowUp'|| e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      if (e.key === arrowUp|| e.key === arrowDown || e.key === arrowLeft || e.key === arrowRight) {
         if (!timeGame.startTimeGame) timeGame.setStartTimeGame();
       }
     });
@@ -117,10 +131,10 @@ export const eventHendlers = () => {
             if (absDiffX > 20 || absDiffY > 20) {
               timeGame.startTimeGame ? '' : timeGame.setStartTimeGame();
               if (absDiffX > absDiffY) {
-                diffX > 0 ? moveInGame('right') : moveInGame('left');
+                diffX > 0 ? makeMoveInGame(right) : makeMoveInGame(left);
               }
               if (absDiffX < absDiffY) {
-                diffY > 0 ? moveInGame('down') : moveInGame('up');
+                diffY > 0 ? makeMoveInGame(down) : makeMoveInGame(up);
               }
             }
             document.removeEventListener('pointerup', endPoint);

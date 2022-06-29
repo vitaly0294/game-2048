@@ -1,4 +1,4 @@
-export const layoutTable = () => {
+export const createLayoutTableBlock = () => {
   const gameContainer = document.querySelector('.game-container');
   const table = document.createElement('div');
   const nameLine = document.createElement('div');

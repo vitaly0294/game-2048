@@ -1,6 +1,6 @@
 import {
   player,
-  clianingContainer,
+  clearContainer,
   renderGameMatrix
 } from './game.js';
 
@@ -8,33 +8,32 @@ import {copyGameMatrix} from './function.js';
 import {scoreGame} from './scoreGame.js';
 import {localStorageGame} from './localStorage.js';
 
-export const btnBackStep = {
-  checkBackStep: 0,
-  checkCopyBackStep: 0,
-  btn: document.querySelector('.back-step-btn'),
+export const buttonBackStep = {
+  check: 0,
+  block: document.querySelector('.back-step-btn'),
 
-  backStep() {
+  useBackStep() {
     copyGameMatrix(player.gameMatrixPrevState, player.gameMatrix);
-    clianingContainer();
+    clearContainer();
     renderGameMatrix(player.gameMatrix);
     scoreGame.scorePlay = scoreGame.scorePlayPrev;
     scoreGame.updateScore('backStep');
-    this.removeActionBtn();
+    this.removeActiveBlock();
 
     player.score = scoreGame.scorePlay;
     player.scorePrevState = 0;
     localStorageGame.set('game', player);
   },
 
-  setActionBtn() {
-    this.btn.classList.add('back-step-btn_active');
-    this.checkBackStep = 1;
+  setActiveBlock() {
+    this.block.classList.add('back-step-btn_active');
+    this.check = 1;
   },
 
-  removeActionBtn() {
-    if (this.btn.classList.contains('back-step-btn_active')) {
-      this.btn.classList.remove('back-step-btn_active');
+  removeActiveBlock() {
+    if (this.block.classList.contains('back-step-btn_active')) {
+      this.block.classList.remove('back-step-btn_active');
     }
-    this.checkBackStep = 0;
+    this.check = 0;
   },
 };

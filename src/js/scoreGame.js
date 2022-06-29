@@ -11,9 +11,7 @@ export const scoreGame = {
 
   addScore(score) {
     this.scorePlay += score;
-
     player.score = this.scorePlay;
-
     this.updateScore();
   },
 
