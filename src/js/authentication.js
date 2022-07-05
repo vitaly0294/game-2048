@@ -1,28 +1,26 @@
 /* eslint-disable max-len */
 import {
-	start,
-	player
+  generateGame,
+  player
 } from './game.js';
 
 export const authentication = {
-	authenticationName: '',
-	name: '',
+  name: '',
+  newName: '',
 
-	setNewPlayer() {
-		this.authenticationName = document.querySelector('.authentication__name').children[0];
-		this.name = prompt('Enter your name', 'Anonymous');
-		const oldName = this.authenticationName.textContent;
+  setNewPlayer() {
+    this.name = document.querySelector('.authentication__name').children[0].textContent;
+    this.newName = prompt('Enter your name', 'Anonymous');
 
-		if (this.name !== oldName && this.name !== null) {
-			start('restart');
-			player.name = this.name;
-			this.updatePlayerName();
-		}
-	},
+    if (this.newName !== this.name && this.newName !== null) {
+      generateGame('restart');
+      player.name = this.newName;
+      this.updatePlayerName();
+    }
+  },
 
-	updatePlayerName() {
-		this.authenticationName = document.querySelector('.authentication__name').children[0];
-		this.authenticationName.textContent = `${this.name}`;
-	}
-
+  updatePlayerName() {
+    this.name = document.querySelector('.authentication__name').children[0];
+    this.name.textContent = `${this.newName}`;
+  }
 };

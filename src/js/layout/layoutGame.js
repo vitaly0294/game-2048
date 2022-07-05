@@ -1,45 +1,46 @@
-export const layoutGame = () => {
-	const btn = document.querySelector('.btn-container');
-	const gameContainer = document.createElement('div');
-	const gridContainer = document.createElement('div');
-	const tileContainer = document.createElement('div');
-	const gameMessage = document.createElement('div');
-	const gameMessageText = document.createElement('p');
-	const gameMessageBtn = document.createElement('div');
-	const retryBtn = document.createElement('a');
-	const keepPlayingBtn = document.createElement('a');
+export const createLayoutGameBlock = () => {
+  const buttonsContainer = document.querySelector('.btn-container');
 
-	gameContainer.className = 'game-container';
-	gridContainer.className = 'grid-container';
-	tileContainer.className = 'tile-container';
-	gameMessage.className = 'game-message';
-	gameMessageText.className = 'game-message__text';
-	gameMessageBtn.className = 'game-message__btn';
-	retryBtn.className = 'retry-btn';
-	keepPlayingBtn.className = 'keep-playing-btn';
+  const gameContainer = document.createElement('div');
+  const gridContainer = document.createElement('div');
+  const tileContainer = document.createElement('div');
+  const gameMessage = document.createElement('div');
+  const gameMessageText = document.createElement('p');
+  const gameMessageButton = document.createElement('div');
+  const retryButton = document.createElement('a');
+  const keepPlayingButton = document.createElement('a');
 
-	btn.after(gameContainer);
-	gameContainer.append(gameMessage);
-	gameMessage.append(gameMessageText);
-	gameMessage.append(gameMessageBtn);
-	gameMessageBtn.append(retryBtn);
-	gameMessageBtn.append(keepPlayingBtn);
-	gameContainer.append(gridContainer);
+  gameContainer.className = 'game-container';
+  gridContainer.className = 'grid-container';
+  tileContainer.className = 'tile-container';
+  gameMessage.className = 'game-message';
+  gameMessageText.className = 'game-message__text';
+  gameMessageButton.className = 'game-message__btn';
+  retryButton.className = 'retry-btn';
+  keepPlayingButton.className = 'keep-playing-btn';
 
-	for (let row = 0; row < 5; row++) {
-		const gridRow = document.createElement('div');
-		gridRow.className = 'grid-row';
-		gridContainer.append(gridRow);
+  buttonsContainer.after(gameContainer);
+  gameContainer.append(gameMessage);
+  gameMessage.append(gameMessageText);
+  gameMessage.append(gameMessageButton);
+  gameMessageButton.append(retryButton);
+  gameMessageButton.append(keepPlayingButton);
+  gameContainer.append(gridContainer);
 
-		for (let cell = 0; cell < 5; cell++) {
-			const gridCell = document.createElement('div');
-			gridCell.className = 'grid-cell';
-			gridRow.append(gridCell);
-		}
-	}
+  for (let row = 0; row < 5; row++) {
+    const gridRow = document.createElement('div');
+    gridRow.className = 'grid-row';
+    gridContainer.append(gridRow);
 
-	gameContainer.append(tileContainer);
+    for (let cell = 0; cell < 5; cell++) {
+      const gridCell = document.createElement('div');
+      gridCell.className = 'grid-cell';
+      gridRow.append(gridCell);
+    }
+  }
 
-	retryBtn.textContent = 'Try again';
-	keepPlayingBtn.textContent = 'Keep going';
+  gameContainer.append(tileContainer);
+
+  retryButton.textContent = 'Try again';
+  keepPlayingButton.textContent = 'Keep going';
 }

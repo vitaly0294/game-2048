@@ -1,18 +1,18 @@
 'use strict';
 
 import '/scss/index.scss';
-import {layoutHeader} from './js/layout/layoutHeader.js';
-import {layoutControl} from './js/layout/layoutControl.js';
-import {layoutGame} from './js/layout/layoutGame.js';
-import {layoutTable} from './js/layout/layoutTable.js';
+import {createLayoutHeaderBlock} from './js/layout/layoutHeader.js';
+import {createLayoutControlBlock} from './js/layout/layoutControl.js';
+import {createLayoutGameBlock} from './js/layout/layoutGame.js';
+import {createLayoutTableBlock} from './js/layout/layoutTable.js';
 
-import {game} from '/js/game.js';
+import {launchGame} from '/js/game.js';
 
 window.addEventListener('DOMContentLoaded', () => {
-	layoutHeader();
-	layoutControl();
-	layoutGame();
-	layoutTable();
+  createLayoutHeaderBlock();
+  createLayoutControlBlock();
+  createLayoutGameBlock();
+  createLayoutTableBlock();
 
-	game();
+  launchGame();
 });
